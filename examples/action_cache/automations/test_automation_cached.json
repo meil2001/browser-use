@@ -23,7 +23,7 @@
       "interaction_action": {
         "input_text": {
           "command": "locator(\"[name=\\\"04fullname\\\"]\").first",
-          "prompt_instructions": "Fill the field name=04fullname",
+          "prompt_instructions": "Fill the field Full Name (name=04fullname)",
           "input_text": "{full_name[0]}",
           "skip_prompt": true
         }
@@ -34,7 +34,7 @@
       "interaction_action": {
         "input_text": {
           "command": "locator(\"[name=\\\"10address1\\\"]\").first",
-          "prompt_instructions": "Fill the field name=10address1",
+          "prompt_instructions": "Fill the field Address Line 1 (name=10address1)",
           "input_text": "{address_line_1[0]}",
           "skip_prompt": true
         }
@@ -45,7 +45,7 @@
       "interaction_action": {
         "input_text": {
           "command": "locator(\"[name=\\\"11address2\\\"]\").first",
-          "prompt_instructions": "Fill the field name=11address2",
+          "prompt_instructions": "Fill the field Address Line 2 (name=11address2)",
           "input_text": "{address_line_2[0]}",
           "skip_prompt": true
         }
@@ -56,7 +56,7 @@
       "interaction_action": {
         "input_text": {
           "command": "locator(\"[name=\\\"13adr_city\\\"]\").first",
-          "prompt_instructions": "Fill the field name=13adr_city",
+          "prompt_instructions": "Fill the field City (name=13adr_city)",
           "input_text": "{city[0]}",
           "skip_prompt": true
         }
