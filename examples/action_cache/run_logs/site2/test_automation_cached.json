@@ -1,0 +1,39 @@
+{
+  "url": "https://books.toscrape.com/catalogue/category/books/travel_2/index.html",
+  "parameters": {
+    "input_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"xpath=html/body/div/div/div/aside/div[2]/ul/li/ul/li[1]/a\").first",
+          "prompt_instructions": "Click the element Travel (xpath=html/body/div/div/div/aside/div[2]/ul/li/ul/li[1]/a)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"xpath=html/body/div/div/div/div/section/div[2]/ol/li[1]/article/h3/a\").first",
+          "prompt_instructions": "Click the element It's Only the Himalayas (xpath=html/body/div/div/div/div/section/div[2]/ol/li[1]/article/h3/a)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "prompt_instructions": "On the book detail page for \"It's Only the Himalayas\", find the button labelled \"Add to basket\" and click it.",
+          "skip_prompt": false,
+          "skip_command": true
+        }
+      }
+    }
+  ]
+}

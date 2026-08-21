@@ -1,0 +1,78 @@
+{
+  "url": "https://www.saucedemo.com/",
+  "parameters": {
+    "input_parameters": {
+      "username": [
+        "standard_user"
+      ],
+      "password": [
+        "secret_sauce"
+      ]
+    },
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "input_text": {
+          "command": "locator(\"[name=\\\"user-name\\\"]\").first",
+          "prompt_instructions": "Fill the field Username (name=user-name)",
+          "input_text": "{username[0]}",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "input_text": {
+          "command": "locator(\"[name=\\\"password\\\"]\").first",
+          "prompt_instructions": "Fill the field Password (name=password)",
+          "input_text": "{password[0]}",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"[name=\\\"login-button\\\"]\").first",
+          "prompt_instructions": "Click the element Login (name=login-button)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"[name=\\\"add-to-cart-sauce-labs-backpack\\\"]\").first",
+          "prompt_instructions": "Click the element Add to cart (name=add-to-cart-sauce-labs-backpack)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"#shopping_cart_container\").first",
+          "prompt_instructions": "Click the element Swag Labs (id=shopping_cart_container)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"xpath=html/body/div/div/div/div[1]/div[1]/div[3]/a\").first",
+          "prompt_instructions": "Click the element 1 (xpath=html/body/div/div/div/div[1]/div[1]/div[3]/a)",
+          "skip_prompt": true
+        }
+      }
+    }
+  ]
+}

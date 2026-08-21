@@ -1,0 +1,23 @@
+{
+  "audit_available": true,
+  "used_by_workflow": [
+    {
+      "event": "ClickElementEvent",
+      "action": "click",
+      "dispatched": 2,
+      "recorded": 2,
+      "hooked": true
+    },
+    {
+      "event": "NavigateToUrlEvent",
+      "action": "go_to_url",
+      "dispatched": 1,
+      "recorded": 0,
+      "hooked": false
+    }
+  ],
+  "blind_spots": [
+    "NavigateToUrlEvent"
+  ],
+  "next": "Blind spot = the agent used this action but nothing was recorded. Hook it at execute-time; do not reconstruct a locator afterwards."
+}

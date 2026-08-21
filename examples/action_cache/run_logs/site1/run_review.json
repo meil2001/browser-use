@@ -1,0 +1,108 @@
+{
+  "values": [
+    {
+      "role": "Full Name",
+      "value": "myname"
+    },
+    {
+      "role": "Address Line 1",
+      "value": "xyz"
+    },
+    {
+      "role": "Address Line 2",
+      "value": "abc"
+    },
+    {
+      "role": "City",
+      "value": "SF"
+    }
+  ],
+  "steps": [
+    {
+      "description": "Fill full name as myname",
+      "kind": "input",
+      "expected_target": "Full Name",
+      "verdict": "covered",
+      "evidence": 0,
+      "evidence_label": "Full Name",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Fill address line one as xyz",
+      "kind": "input",
+      "expected_target": "Address Line 1",
+      "verdict": "covered",
+      "evidence": 1,
+      "evidence_label": "Address Line 1",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Fill address line 2 as abc",
+      "kind": "input",
+      "expected_target": "Address Line 2",
+      "verdict": "covered",
+      "evidence": 2,
+      "evidence_label": "Address Line 2",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Fill city as SF",
+      "kind": "input",
+      "expected_target": "City",
+      "verdict": "covered",
+      "evidence": 3,
+      "evidence_label": "City",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    }
+  ],
+  "summary": {
+    "available": true,
+    "steps_total": 4,
+    "covered": 4,
+    "missing": 0,
+    "unverifiable": 0,
+    "actions_recorded": 4,
+    "conflicts": []
+  },
+  "source": "llm",
+  "task": "fill the full name as myname, address line one as xyz and line 2 as abc, city as SF",
+  "fingerprint": "49393deff28b1514388b91358a148be37686403073dbb7ff8a9affb56a79d6d5",
+  "trace": [
+    {
+      "i": 0,
+      "action": "input",
+      "label": "Full Name",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 1,
+      "action": "input",
+      "label": "Address Line 1",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 2,
+      "action": "input",
+      "label": "Address Line 2",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 3,
+      "action": "input",
+      "label": "City",
+      "text": "SF",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    }
+  ]
+}

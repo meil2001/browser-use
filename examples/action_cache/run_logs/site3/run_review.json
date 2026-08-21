@@ -1,0 +1,174 @@
+{
+  "values": [
+    {
+      "role": "Username",
+      "value": "standard_user"
+    },
+    {
+      "role": "Password",
+      "value": "secret_sauce"
+    }
+  ],
+  "steps": [
+    {
+      "description": "Log in with the username \"standard_user\"",
+      "kind": "input",
+      "expected_target": "Username",
+      "verdict": "covered",
+      "evidence": 0,
+      "evidence_label": "Username",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Log in with the password \"secret_sauce\"",
+      "kind": "input",
+      "expected_target": "Password",
+      "verdict": "covered",
+      "evidence": 1,
+      "evidence_label": "Password",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Submit login",
+      "kind": "click",
+      "expected_target": "Login",
+      "verdict": "covered",
+      "evidence": 2,
+      "evidence_label": "Login",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Click the \"Add to cart\" button belonging to the product \"Sauce Labs Backpack\"",
+      "kind": "click",
+      "expected_target": "Add to cart (Sauce Labs Backpack)",
+      "verdict": "unverifiable",
+      "evidence": 3,
+      "evidence_label": "Add to cart",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Open the cart page by clicking the shopping cart icon in the top right corner",
+      "kind": "click",
+      "expected_target": "Shopping cart icon",
+      "verdict": "covered",
+      "evidence": 12,
+      "evidence_label": "1",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    }
+  ],
+  "summary": {
+    "available": true,
+    "steps_total": 5,
+    "covered": 4,
+    "missing": 0,
+    "unverifiable": 1,
+    "actions_recorded": 13,
+    "conflicts": []
+  },
+  "source": "llm",
+  "task": "Log in with the username \"standard_user\" and the password \"secret_sauce\". After logging in, click the \"Add to cart\" button belonging to the product \"Sauce Labs Backpack\". Then open the cart page by clicking the shopping cart icon in the top right corner. Then stop — do not add any other product.",
+  "fingerprint": "0e07ecdfe0c8e0e55ee833298a0be52a1927bcd7fbfeb310fabd99dcda3bab71",
+  "trace": [
+    {
+      "i": 0,
+      "action": "input",
+      "label": "Username",
+      "text": "standard_user",
+      "url": "https://www.saucedemo.com/"
+    },
+    {
+      "i": 1,
+      "action": "input",
+      "label": "Password",
+      "text": "secret_sauce",
+      "url": "https://www.saucedemo.com/"
+    },
+    {
+      "i": 2,
+      "action": "click",
+      "label": "Login",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 3,
+      "action": "click",
+      "label": "Add to cart",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 4,
+      "action": "click",
+      "label": "Swag Labs",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 5,
+      "action": "click",
+      "label": "Add to cart",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 6,
+      "action": "click",
+      "label": "Add to cart",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 7,
+      "action": "click",
+      "label": "Add to cart",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 8,
+      "action": "click",
+      "label": "Add to cart",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 9,
+      "action": "click",
+      "label": "Add to cart",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 10,
+      "action": "click",
+      "label": "Swag Labs",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 11,
+      "action": "click",
+      "label": "Swag Labs",
+      "text": null,
+      "url": "https://www.saucedemo.com/inventory.html"
+    },
+    {
+      "i": 12,
+      "action": "click",
+      "label": "1",
+      "text": null,
+      "url": "https://www.saucedemo.com/cart.html"
+    }
+  ]
+}

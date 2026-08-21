@@ -1,0 +1,276 @@
+{
+  "values": [
+    {
+      "role": "full name",
+      "value": "myname"
+    },
+    {
+      "role": "address line 1",
+      "value": "xyz"
+    },
+    {
+      "role": "address line 2",
+      "value": "abc"
+    },
+    {
+      "role": "city",
+      "value": "SF"
+    }
+  ],
+  "steps": [
+    {
+      "description": "fill the full name as myname",
+      "kind": "input",
+      "expected_target": "Full Name field",
+      "verdict": "covered",
+      "evidence": 0,
+      "evidence_label": "",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "fill address line one as xyz",
+      "kind": "input",
+      "expected_target": "Address Line 1 field",
+      "verdict": "covered",
+      "evidence": 1,
+      "evidence_label": "",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "fill address line 2 as abc",
+      "kind": "input",
+      "expected_target": "Address Line 2 field",
+      "verdict": "covered",
+      "evidence": 2,
+      "evidence_label": "",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "fill city as SF",
+      "kind": "input",
+      "expected_target": "City field",
+      "verdict": "covered",
+      "evidence": 26,
+      "evidence_label": "",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    }
+  ],
+  "summary": {
+    "available": true,
+    "steps_total": 4,
+    "covered": 4,
+    "missing": 0,
+    "unverifiable": 0,
+    "actions_recorded": 28,
+    "conflicts": []
+  },
+  "source": "llm",
+  "task": "fill the full name as myname, address line one as xyz and line 2 as abc, city as SF",
+  "fingerprint": "1a4dfa844acfe39a975cf08a7942f6a5dce23ef30e463e1133498a074b339cf1",
+  "trace": [
+    {
+      "i": 0,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 1,
+      "action": "input",
+      "label": "",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 2,
+      "action": "input",
+      "label": "",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 3,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 4,
+      "action": "input",
+      "label": "",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 5,
+      "action": "input",
+      "label": "",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 6,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 7,
+      "action": "input",
+      "label": "",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 8,
+      "action": "input",
+      "label": "",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 9,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 10,
+      "action": "input",
+      "label": "",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 11,
+      "action": "input",
+      "label": "",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 12,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 13,
+      "action": "input",
+      "label": "",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 14,
+      "action": "input",
+      "label": "",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 15,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 16,
+      "action": "input",
+      "label": "",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 17,
+      "action": "input",
+      "label": "",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 18,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 19,
+      "action": "input",
+      "label": "",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 20,
+      "action": "input",
+      "label": "",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 21,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 22,
+      "action": "input",
+      "label": "",
+      "text": "xyz",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 23,
+      "action": "input",
+      "label": "",
+      "text": "abc",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 24,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 25,
+      "action": "input",
+      "label": "",
+      "text": "myname",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 26,
+      "action": "input",
+      "label": "",
+      "text": "SF",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    },
+    {
+      "i": 27,
+      "action": "input",
+      "label": "",
+      "text": "SF",
+      "url": "https://www.roboform.com/filling-test-all-fields"
+    }
+  ]
+}

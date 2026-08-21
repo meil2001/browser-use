@@ -1,0 +1,63 @@
+{
+  "required": [],
+  "cached": [],
+  "missing": [],
+  "extra": [],
+  "weak": [
+    {
+      "text": null,
+      "by": "xpath",
+      "value": "html/body/div/div/div/aside/div[2]/ul/li/ul/li[1]/a"
+    },
+    {
+      "text": null,
+      "by": "xpath",
+      "value": "html/body/div/div/div/div/section/div[2]/ol/li[1]/article/h3/a"
+    }
+  ],
+  "steps": [
+    {
+      "description": "Go to the \"Travel\" category",
+      "kind": "click",
+      "expected_target": "Travel",
+      "verdict": "covered",
+      "evidence": 0,
+      "evidence_label": "Travel",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Click on the book titled \"It's Only the Himalayas\" to open its detail page",
+      "kind": "click",
+      "expected_target": "It's Only the Himalayas",
+      "verdict": "covered",
+      "evidence": 1,
+      "evidence_label": "It's Only the Himalayas",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Click the \"Add to basket\" button on the book detail page",
+      "kind": "click",
+      "expected_target": "Add to basket",
+      "verdict": "missing",
+      "evidence": null,
+      "evidence_label": "",
+      "repair_prompt": "On the book detail page for \"It's Only the Himalayas\", find the button labelled \"Add to basket\" and click it.",
+      "repair_prompt_source": "llm",
+      "notes": []
+    }
+  ],
+  "step_summary": {
+    "available": true,
+    "steps_total": 3,
+    "covered": 2,
+    "missing": 1,
+    "unverifiable": 0,
+    "actions_recorded": 2,
+    "conflicts": []
+  },
+  "next": "If a gap node types via input(), re-run python -m browser_use.action_cache. Do not invent locators from evaluate() or axtree."
+}

@@ -388,7 +388,7 @@ node rather than a guess.
 
 ## 10. Results — four sites, measured
 
-Full numbers with log-line provenance in `run_logs/RUN2_METRICS.md`.
+Full numbers with log-line provenance in `examples/action_cache/METRICS.md`.
 
 ### Run 1 (agentic exploration)
 
@@ -532,16 +532,7 @@ page-grounded prompt sharpening, parameterized output, and a documented negative
 
 ---
 
-## 14. Still outstanding
-
-**Both forks are uncommitted.** `browser-use` and `optexity` are on `main` with zero commits
-ahead of origin, and `action_cache.py` — the entire deliverable, 1,738 lines — is untracked.
-"Branch and PR on your own forks" is itself a required deliverable, and right now there is
-nothing to open a PR from. This is the highest-priority item and takes five minutes.
-
----
-
-## 15. Demo defence
+## 14. Questions a reviewer will ask
 
 **"Show me the log line that produced this locator."**
 `action_cache.jsonl` line → `identity: {"by": "id", "value": "search-query"}` →
@@ -565,29 +556,29 @@ Every drop names its rule — off-task value, superseded write, wrong role for t
 observed effect — and `coverage.json` lists what was dropped and why.
 
 **"What's still wrong with it?"**
-Section 12, unprompted, starting with the xpath that could silently add the wrong product.
+Section 12, starting with the position-dependent xpath that could silently add the wrong
+product — the one known defect that can produce a wrong result while reporting success.
 
 ---
 
-## 16. File map
+## 15. File map
 
 | File | Contents |
 |---|---|
-| `STEPS.md` | The pipeline explained stage by stage |
-| `Optimised further steps.md` | Coverage gap, hybrid Run 2, recaching |
-| `Optimised further steps 2.md` | Label-aware filtering + hook coverage audit |
-| `Optimised further steps 3.md` | Post-run review: step coverage, evidence, repair prompts |
-| `Optimised further steps 4.md` | Grounding repair prompts in the page's own vocabulary |
-| `Optimised further steps 5.md` | Replay-first repair; the cache finishing what the agent couldn't |
-| `Optimised further steps 6.md` | Audit: do repair prompts actually learn from failure? |
-| `Optimised further steps 7.md` | Effect recording, and the false positives it exposed |
-| `Open Items.md` | Punch list: git risk, corner cases, what's still open |
-| `run_logs/RUN2_METRICS.md` | Measured Run 1 vs Run 2, every row citing a log line |
-| `CONTEXT.md` | Assignment master context |
+| `browser_use/action_cache.py` | The pipeline: hook, identity, filters, review, emit |
+| `browser_use/tools/service.py` | The two hook call sites (click, input) |
+| `browser_use/browser/session.py`, `browser_use/dom/views.py` | Fork compatibility fixes |
+| `examples/action_cache/run_repair_loop.py` | Loop driver: replay, repair, verify |
+| `examples/action_cache/METRICS.md` | Measured Run 1 vs Run 2, every row citing a log line |
+| `examples/action_cache/README.md` | This file |
+
+Companion changes in the `optexity` fork: a local automation-JSON override for iteration
+without a server round-trip, and per-run token accounting so agentic and cached runs can be
+compared.
 
 ---
 
-## 17. In one page
+## 16. In one page
 
 Hook browser-use at execute time, where the live DOM node is still in scope, and record what
 the browser *did* along with each element's durable identity, its visible label, and a

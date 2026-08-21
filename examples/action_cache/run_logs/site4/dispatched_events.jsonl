@@ -1,0 +1,5 @@
+{"t": "2026-08-21T17:09:33.439242+00:00", "event": "TypeTextEvent"}
+{"t": "2026-08-21T17:09:40.600407+00:00", "event": "ClickElementEvent"}
+{"t": "2026-08-21T17:09:58.412107+00:00", "event": "ClickElementEvent"}
+{"t": "2026-08-21T17:10:08.443298+00:00", "event": "NavigateToUrlEvent"}
+{"t": "2026-08-21T17:11:16.205725+00:00", "event": "ClickElementEvent"}
