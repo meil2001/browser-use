@@ -10,7 +10,7 @@ bug found along the way, and an honest list of what is still broken.
 
 ---
 
-## 1. The problem, in one paragraph
+## The problem, in one paragraph
 
 Optexity workflows are JSON graphs of nodes. A node is either **deterministic** (a Playwright
 locator plus an action — fast, free, repeatable) or **agentic** (a natural-language task handed
@@ -20,7 +20,9 @@ what it does ("type the username", "click submit") is perfectly deterministic on
 where the fields are. The assignment is to build the missing memory: watch an agentic run,
 learn the deterministic steps from it, and replay them without the model.
 
-## 2. The core idea
+---
+
+## The core idea
 
 > Run 1 is a student taking a test with a tutor. Run 2 is a cheat sheet built from what the
 > student **did**, not from what the tutor **said**.
@@ -39,7 +41,7 @@ Two rules follow from this and are enforced everywhere:
 
 ---
 
-## 3. Where the code lives
+## Where the code lives
 
 | Location | Lines | What it is |
 |---|---|---|
@@ -79,316 +81,21 @@ the exact stage that dropped it, which is the difference between "the cache is w
 
 ---
 
-## 4. The invariant — how every retry is run
+## How it works — the two halves
 
-This is the single most important design decision, and it was learned the hard way.
+The mechanics live in two focused documents rather than in this one:
 
-1. **Replay every step we already hold a locator for through Playwright, with no LLM.** Not a
-   teleport to a saved URL. A URL is not a position in a task — the *session* is. Replaying
-   earns the cookies, the login and the correct page as a side effect, and costs about a second
-   instead of a dozen model calls.
-2. **The LLM takes over only at the broken step**, as one gap node's `prompt_instructions`.
-   One node, one instruction, nothing else.
-3. **Read the page's element inventory from that live session**, after the replay — so the
-   vocabulary fed to the prompt sharpener comes from the page we are actually on. Scanning by
-   URL beforehand reads whatever a logged-out visit gets redirected to.
-4. **Progress means a locator appeared for the broken step.** Not "the trace grew" — a replayed
-   prefix grows the trace every single time, which is exactly how a broken loop convinces
-   itself it is making headway.
-
-Violating (1) is what made an early saucedemo run cost 448,282 tokens across four passes and
-still fail: it teleported to `inventory.html`, got bounced to the login screen, and then
-described that login screen to the prompt sharpener while trying to solve a cart problem.
-Honouring the invariant closed the same gap in one pass for 25,498 tokens.
-
-One ordering detail is load-bearing rather than stylistic: **Playwright launches the browser
-and browser-use attaches afterwards over CDP.** The replay must run on a clean Playwright
-session, because with a browser-use session attached, Playwright's clicks become unreliable on
-React sites.
-
----
-
-## 5. The pipeline, stage by stage
-
-### Stage 1 — Hook at *doing*, not at *thinking*
-
-`append_executed_action()`, called from `tools/service.py` immediately after the click or type
-succeeds.
-
-"I should fill the city next" is worthless for replay. "I typed `SF` into this box" is
-everything. The hook fires at execute time for one reason: that is the only moment when the
-live DOM node object is still in scope **and** we know the action succeeded. One instant
-earlier and we don't know it worked; one instant later and the node reference is gone.
-
-Each record captures:
-
-```json
-{"t": "...", "action": "input", "index": 13, "text": "Pliers",
- "url": "https://...", "tag": "input", "attributes": {...},
- "xpath": "...", "label": "Search", "shadow_hosts": [],
- "identity": {"by": "id", "value": "search-query"},
- "after": {"title": "...", "interactive": 43, "text_len": 1385, "target": {...}}}
-```
-
-Structured JSONL, one object per line — not print statements. It can be diffed, filtered,
-replayed and audited, and every later stage is a pure function over it.
-
-**`label` is the quiet hero.** `field_label()` walks up to four ancestors looking for visible
-text, falling back through `aria-label`, `title` and `placeholder`. Without it the compiler can
-only ask "was this string on the task list?", which cannot tell the City box from the State box
-when both accept `SF`. With it, the compiler can ask the far better question: "does this
-field's label match the *role* the task asked for?"
-
-**`after` is the effect probe** — see §7.
-
-#### The hook audit
-
-A hook on two call sites raises an obvious objection: what about everything else? So
-`install_hook_audit()` attaches a wildcard observer to `browser_session.event_bus`, logs every
-dispatched event to `dispatched_events.jsonl`, and `hook_coverage()` compares dispatched
-against recorded. If browser-use performs a replayable action we failed to record, it appears
-as a named blind spot rather than as a silent hole. This is how we know, with evidence, that
-`NavigateToUrlEvent` is dispatched but never recorded.
-
-### Stage 2 — Give every element a durable identity
-
-`node_identity()`, `stable_identity()`.
-
-browser-use addresses elements by index: `[13]<input>`. Index 13 is "the thirteenth interactive
-thing on screen right now" — it dies on the next re-render. So each index is converted, at
-capture time, into something that survives: `name`, then `id`, then `placeholder`, then an
-xpath, plus any shadow-DOM host chain. **The index is never cached.**
-
-### Stage 3 — Keep only what the task asked for
-
-`align_cache()`, `is_on_task()`, `required_values_and_roles()`.
-
-If the agent typed into a search bar while exploring, that is not part of the task. The filter
-compares typed text against the values the task actually requires.
-
-Two safety properties matter here more than the filter itself:
-
-- **No silent substitution.** An earlier version fell back to Roboform's hardcoded values
-  (`myname`, `xyz`, `abc`, `SF`) whenever its regex found nothing — which meant that on any
-  other site, Stage 3 would silently delete every real action. Now extraction returns only what
-  it genuinely found, including nothing.
-- **Fail open, not closed.** `is_on_task()` treats an empty requirement list as "keep
-  everything", not "reject everything". Worst case we over-keep, which `coverage.json` surfaces
-  in its `extra` field as a visible problem. The alternative — silently deleting real data — is
-  the failure mode that destroys trust in a cache.
-
-`annotate_effects()` also runs here, on the **raw** consecutive trace, before any filtering.
-It has to: filtering first would break adjacency and make the URL comparison compare two
-actions that never actually followed one another.
-
-### Stage 4 — One record per element (drop the retries)
-
-`slice_cache()` = `last_write_per_identity()` → `best_write_per_input_text()`.
-
-Run 1 types the same value repeatedly, corrects itself, and clicks the same button many times.
-The cheat sheet needs one entry per element. Three rules, applied in order:
-
-1. **Last write wins per identity** — the final successful write to a given element.
-2. **Prefer the attempt that demonstrably did something** — `effect_rank()` promotes a record
-   with a measured effect over one without, with `>=` preserving last-write-wins on equal
-   evidence so traces with no effect data behave exactly as before.
-3. **Role-match scoring** — when the same value was typed into two different boxes,
-   `role_match_score()` compares the task's role ("city") against each field's captured label
-   ("City" vs "State") and keeps the one that matches.
-
-Rule 3 is what replaced luck with logic. The original rule was "if the same value went into two
-boxes, keep the later one" — and `SF` happened to land in City second. Had the order been
-reversed, we'd have cached State and never noticed.
-
-### Stage 5 — Choose the most durable locator
-
-`locate_cache()`, `playwright_command()`.
-
-Preference order: `name` → `id` → `placeholder` → xpath. Anything resolved only by xpath is
-flagged `weak` in the coverage report rather than silently accepted.
-
-### Stage 6 — Emit the automation
-
-`emit_cached_automation()`, `record_to_action_node()`, `build_param_names()`.
-
-Produces `test_automation_cached.json`: `input_text` and `click_element` nodes, each carrying a
-locator that came from a log line, each with `skip_prompt: true` so there is no LLM fallback
-path even if a locator fails. Validated against the real
-`optexity.schema.automation.Automation.model_validate()`, including the `key.isidentifier()`
-constraint the schema enforces on parameter names.
-
-**Parameterization.** Literal values are lifted into `input_parameters` and referenced as
-`{city[0]}`, so the workflow is reusable with different data instead of hardcoding one person's
-details. Names come from the task role when known, falling back to the value, with
-collision-safe suffixing:
-
-```json
-"input_parameters": {"full_name": ["myname"], "address_line_1": ["xyz"],
-                     "address_line_2": ["abc"], "city": ["SF"]}
-```
-
-### Stage 6.5 — Coverage: say what is missing
-
-`coverage_report()`, `weak_identities()`, `ineffective_nodes()`, `write_coverage()`.
-
-The stage that makes the whole thing honest. `coverage.json` reports:
-
-- **value coverage** — required values cached vs missing
-- **step coverage** — which task steps the trace supports (from the review, §6)
-- **weak** — locators resolved only by xpath
-- **ineffective** — cached actions never observed to change anything
-- **extra** — cached actions that don't correspond to anything the task asked for
-
-Anything missing becomes a **gap node**: `skip_command: true`, `skip_prompt: false`. It carries
-an instruction and no locator, so the LLM fills that one step, the run is recorded, and the
-pipeline recompiles — this time with a real locator. That is the mechanism by which the cache
-grows without anyone ever inventing a selector.
-
----
-
-## 6. The post-run review — catching missing *steps*, not just missing values
-
-An earlier design extracted a checklist from the task text alone. Testing on a second site
-killed it: a task-text-only spec can notice a missing typed *value*, but it is blind to a
-missing *click*. On books.toscrape the required values list was legitimately empty, so coverage
-reported "nothing missing" for a run that had done two of three steps.
-
-The fix is one LLM call that runs **after** the run and sees both the task and the trace.
-
-`load_run_review()` → `llm_review_run()` → `_validated_review()`, writing `run_review.json`:
-
-```text
-1. [covered]  Type "Pliers" into the search box    evidence: trace[0] 'Search'
-2. [covered]  Open the product "Slip Joint Pliers" evidence: trace[1] 'Slip Joint Pliers...'
-3. [covered]  Add that product to the cart         evidence: trace[2] 'Add to cart'
-4. [missing]  Open the cart page                   evidence: —
-```
-
-The model gets `trace_digest()` — a deliberately **locator-free** view. It never sees an xpath,
-an identity or a command, so it cannot produce a locator even if it wanted to. It segments the
-task into steps and judges each as `covered`, `missing` or `unverifiable`, and it must cite a
-trace index as evidence.
-
-This is where the "never trust the agent" rule pays off most visibly. On toolshop the agent
-reached the cart by calling `navigate` — which isn't hooked — and then reported
-`✅ Opened the cart page`. The reviewer read the trace, found no recorded action, and marked
-the step `missing`. Without it we would have shipped a three-node automation that stops on the
-product page while the agent's own summary insisted the task was complete.
-
-### Guardrails on the model's output
-
-Because an LLM is in the loop, every output is policed:
-
-- `_scrub_repair_prompt()` + `_LOCATOR_LEAK_RE` — reject any repair prompt containing something
-  that looks like a selector, so the model can never smuggle in a locator
-- `_validated_review()` — verdicts must be one of `_STEP_VERDICTS`; evidence indices must exist
-- `_empty_step_summary()` — a failed review yields an explicit "no check ran, this is not a
-  pass", never a silent success
-- `_review_fingerprint()` — results cached on `(task, digest)`, so recompiling never re-bills
-- `_extract_json_object()` — tolerates markdown fences and surrounding prose
-
-The review's only job is judging coverage and writing English prompts. It never picks a
-locator, and it cannot overrule a measured effect.
-
----
-
-## 7. Effect tracking — "executed" versus "achieved"
-
-The deepest bug in the original design: the recorder captured that an action *ran*, not that it
-*worked*. On saucedemo, browser-use clicked "Add to cart" repeatedly, the hook faithfully
-recorded every click as a success, and the cart stayed empty. Ten recorded successes, zero
-achieved. Everything downstream inherited that lie.
-
-The fix is to measure, at execute time, what changed.
-
-**`_EFFECT_PROBE`** — one JS snippet, run immediately after each action, reading three
-page-wide numbers (title, interactive element count, body text length) plus the state of the
-element just touched (present? text? value?).
-
-**`_PROBE_SETTLE_SECONDS = 0.3`** — a framework re-render is fast but not instant; saucedemo
-renames its add-to-cart button 18 ms after the click. A probe fired straight down an already-open
-CDP channel can beat the re-render, read the stale DOM, and report a working click as dead. The
-settle exists to lose that race deliberately.
-
-**`action_effect()`** compares each record against the previous one (the previous record's
-`after` doubles as this action's `before`, so one probe per action suffices) and returns:
-
-| Verdict | Meaning |
+| Document | Covers |
 |---|---|
-| `effective` | the page provably changed, or the field holds the typed value |
-| `no_observed_effect` | the action ran and nothing changed at all |
-| `no_navigation` | a click that didn't navigate; in-page effects unmeasured |
-| `unknown` | no usable data — **never** treated as failure |
+| **[PIPELINE.md](PIPELINE.md)** | The step logic: the hook, element identity, the filters, effect measurement, emitting the automation, and the explicit good-vs-bad rules |
+| **[LOOP.md](LOOP.md)** | The loop logic: the replay-first invariant, the post-run review, and the iterative repair loop |
 
-Three subtleties, each learned from a real false verdict:
-
-- **Only navigable actions get credit for navigating.** Typing cannot move the page, so a URL
-  change straddling a typing action came from something else.
-- **Never compare two readings that straddle a navigation.** A reading taken just after a page
-  load catches it mid-render; charging that drift to the next click declared a dead button
-  successful.
-- **Structure beats prose.** Title and interactive-element count survive re-render noise; raw
-  text length does not, so a text-only difference yields `unknown`, not proof.
-
-Wired into four places: dedupe prefers effective records; the reviewer sees the verdict and is
-told to prefer citing an `effective` entry; coverage flags ineffective nodes; and the loop's
-progress rule counts only effective new locators.
-
-Crucially, ineffective records are **flagged, never deleted** — because on saucedemo that same
-"dead" click produced the locator that works perfectly under Playwright. An ineffective action
-tells you about the executor that ran it, not necessarily about the locator it yielded.
+The rest of this document is the context around them: results, the bugs that shaped the
+design, what is still broken, and what a reviewer is likely to ask.
 
 ---
 
-## 8. The iterative repair loop
-
-`run_repair_loop.py`. Run 1 → review → sharper prompt → repair → re-review, until nothing is
-missing or no progress is made.
-
-```text
-pass 0   agentic exploration from the declared start URL
-         ↓ compile, review
-         is anything missing?
-pass n   replay_prefix()          all cached steps, pure Playwright, zero LLM
-         page_landmarks()         read the live page's actual element labels
-         improve_repair_prompt()  sharpen using landmarks + prior failures
-         run_agent()              browser-use attaches over CDP, ONE broken step
-         ↓ compile, review
-         did an effective new locator appear?  no → stop
-verify   verify_replay()          run the whole emitted automation, pure Playwright
-```
-
-`improve_repair_prompt()` is fed the page's real vocabulary from `page_landmarks()` and is told
-to reference only elements in that list. This exists because the sharpener used to invent page
-details ("the green or orange button") that were nowhere on the page. It also receives the
-prior attempts including `recorded_a_new_action` and `agent_claimed_success` — and is told
-explicitly that `recorded_a_new_action: false` outranks any prose the agent wrote.
-
-The loop stops on **no progress**, not on a fixed iteration count, and "progress" is
-deliberately strict (an *effective* locator for the *broken* step). That is what lets it
-conclude a task is impossible instead of burning passes forever.
-
----
-
-## 9. Good vs bad steps — the explicit rules
-
-Not "I looked at the log and picked". Every drop is a rule with a name:
-
-| Kept | Dropped | Rule |
-|---|---|---|
-| typed value on the task's list | typing into a search bar while exploring | Stage 3, `is_on_task()` |
-| final write to a field | the seven earlier retries | Stage 4, `last_write_per_identity()` |
-| the field whose label matches the task role | the same value in the wrong box | Stage 4, `role_match_score()` |
-| the attempt that changed something | the identical attempt that didn't | Stage 4, `effect_rank()` |
-| `name`/`id`/`placeholder` locators | the element index | Stage 5, identity order |
-| — | scrolls, hovers, no-ops | never recorded: the hook only fires on click/input |
-
-Anything that survives all of these and *still* can't be turned into a locator becomes a gap
-node rather than a guess.
-
----
-
-## 10. Results — four sites, measured
+## Results — four sites, measured
 
 Full numbers with log-line provenance in `examples/action_cache/METRICS.md`.
 
@@ -462,7 +169,7 @@ replay-first was *cheaper*; on toolshop it was *necessary*.
 
 ---
 
-## 11. Bugs found and fixed
+## Bugs found and fixed
 
 The list a demo should volunteer rather than have extracted from it.
 
@@ -490,7 +197,7 @@ fired immediately after login do nothing, later ones land.
 
 ---
 
-## 12. Known limitations, in severity order
+## Known limitations, in severity order
 
 1. **Position-dependent xpath.** Site 4 cached `.../div[1]/a[5]` and `ul/li[5]/a`. They work
    today, but if catalog order or relevance ranking changes, `a[5]` silently clicks a *different
@@ -519,7 +226,7 @@ fired immediately after login do nothing, later ones land.
 
 ---
 
-## 13. Bonus items
+## Bonus items
 
 Both optional items are built and working:
 
@@ -534,7 +241,7 @@ page-grounded prompt sharpening, parameterized output, and a documented negative
 
 ---
 
-## 14. Questions a reviewer will ask
+## Questions a reviewer will ask
 
 **"Show me the log line that produced this locator."**
 `action_cache.jsonl` line → `identity: {"by": "id", "value": "search-query"}` →
@@ -558,12 +265,12 @@ Every drop names its rule — off-task value, superseded write, wrong role for t
 observed effect — and `coverage.json` lists what was dropped and why.
 
 **"What's still wrong with it?"**
-Section 12, starting with the position-dependent xpath that could silently add the wrong
+*Known limitations*, starting with the position-dependent xpath that could silently add the wrong
 product — the one known defect that can produce a wrong result while reporting success.
 
 ---
 
-## 15. File map
+## File map
 
 | File | Contents |
 |---|---|
@@ -571,7 +278,9 @@ product — the one known defect that can produce a wrong result while reporting
 | `browser_use/tools/service.py` | The two hook call sites (click, input) |
 | `browser_use/browser/session.py`, `browser_use/dom/views.py` | Fork compatibility fixes |
 | `examples/action_cache/README.md` | Introduction and index |
-| `examples/action_cache/DESIGN.md` | This file |
+| `examples/action_cache/DESIGN.md` | This file: results, bugs, limitations, reviewer questions |
+| `examples/action_cache/PIPELINE.md` | Step logic: hook, identity, filters, effects, emit |
+| `examples/action_cache/LOOP.md` | Loop logic: invariant, post-run review, repair loop |
 | `examples/action_cache/METRICS.md` | Measured Run 1 vs Run 2, every row citing a log line |
 | `examples/action_cache/run_repair_loop.py` | Loop driver: replay, repair, verify |
 | `examples/action_cache/automations/` | Every automation, agentic and cached, plus its own README |
@@ -587,7 +296,7 @@ there.
 
 ---
 
-## 16. In one page
+## In one page
 
 Hook browser-use at execute time, where the live DOM node is still in scope, and record what
 the browser *did* along with each element's durable identity, its visible label, and a

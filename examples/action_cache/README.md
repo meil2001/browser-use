@@ -25,7 +25,9 @@ Two rules hold everywhere in this code:
 
 | If you want… | Read |
 |---|---|
-| how it works, stage by stage, and why | **[DESIGN.md](DESIGN.md)** |
+| the overview: results, bugs, limitations, what a reviewer will ask | **[DESIGN.md](DESIGN.md)** |
+| **step logic** — how one run becomes an automation, stage by stage | **[PIPELINE.md](PIPELINE.md)** |
+| **loop logic** — how several runs converge on a complete automation | **[LOOP.md](LOOP.md)** |
 | the numbers, with a log line behind each one | **[METRICS.md](METRICS.md)** |
 | the automations themselves, before and after | **[automations/README.md](automations/README.md)** |
 | the raw evidence each locator came from | **[run_logs/README.md](run_logs/README.md)** |
