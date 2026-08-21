@@ -1,3 +1,28 @@
+> # Optexity take-home: action cache
+>
+> **A memory layer for agentic automations.** Run 1 explores with an LLM, we record what the
+> browser actually did, and Run 2 replays it as deterministic Playwright steps with **zero model
+> calls**. On the Roboform task that is **68,473 tokens and 6 LLM steps down to 0 and 0.**
+>
+> ### → Start here: [`examples/action_cache/README.md`](examples/action_cache/README.md)
+>
+> | | |
+> |---|---|
+> | How it works, and why | [`examples/action_cache/DESIGN.md`](examples/action_cache/DESIGN.md) |
+> | Measured Run 1 vs Run 2 | [`examples/action_cache/METRICS.md`](examples/action_cache/METRICS.md) |
+> | The automations, before and after | [`examples/action_cache/automations/`](examples/action_cache/automations/) |
+> | The evidence behind every locator | [`examples/action_cache/run_logs/`](examples/action_cache/run_logs/) |
+> | The pipeline itself | [`browser_use/action_cache.py`](browser_use/action_cache.py) |
+> | The iterative loop | [`examples/action_cache/run_repair_loop.py`](examples/action_cache/run_repair_loop.py) |
+>
+> Tested on four sites: a form fill, a login-and-cart flow, a search-and-pick flow, and one
+> task that turned out to be impossible, which the loop reported rather than faking.
+> Companion changes live in the [`optexity`](https://github.com/meil2001/optexity) fork.
+>
+> *Everything below this line is the upstream browser-use README.*
+
+---
+
 <picture>
   <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/2ccdb752-22fb-41c7-8948-857fc1ad7e24"">
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/774a46d5-27a0-490c-b7d0-e65fcbbfa358">
