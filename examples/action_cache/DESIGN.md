@@ -282,6 +282,7 @@ product — the one known defect that can produce a wrong result while reporting
 | `examples/action_cache/PIPELINE.md` | Step logic: hook, identity, filters, effects, emit |
 | `examples/action_cache/LOOP.md` | Loop logic: invariant, post-run review, repair loop |
 | `examples/action_cache/METRICS.md` | Measured Run 1 vs Run 2, every row citing a log line |
+| `tests/ci/test_action_cache.py` | 59 unit tests, one per filter rule, no browser needed |
 | `examples/action_cache/run_repair_loop.py` | Loop driver: replay, repair, verify |
 | `examples/action_cache/automations/` | Every automation, agentic and cached, plus its own README |
 | `examples/action_cache/run_logs/` | The evidence behind every locator, plus its own README |

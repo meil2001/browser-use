@@ -138,3 +138,32 @@ export LOCAL_AUTOMATION_JSON=examples/action_cache/automations/test_automation_c
 
 Environment variables are listed in `tools/setup_env.sh.example`. Run 2 needs none of the LLM
 ones: every cached node carries `skip_prompt: true` and none is an `agentic_task`.
+
+## Tests
+
+```bash
+pytest tests/ci/test_action_cache.py -q     # 59 tests, ~0.1 s, no browser or network
+```
+
+The four live sites prove the happy path and little else. Every bug this actually hit was an
+edge in a filter — a requirement list that came back empty and deleted every typed value, a URL
+change credited to a keystroke, a stale baseline that called a dead click a success — and none
+of those reproduce on demand against a real website.
+
+So the suite is one test per *rule*, on hand-built records: the identity order that keeps a
+positional xpath from beating a stable attribute, Stage 3 failing open on an empty requirement
+list, effect-aware dedupe preferring the click that worked over the one that came last, the
+verdict ladder in `action_effect`, and the emitter refusing to produce a node without a command.
+
+`test_and_does_so_when_the_wrong_field_was_typed_last` is the one worth singling out. It types
+"SF" into City *then* State, which is the order the old last-write-wins rule got wrong — that
+rule only ever passed by accident, and this proves the label-matching fix removed the luck.
+
+**On the tests marked FIXED.** Five docstrings describe a bug and mark it `FIXED, guarded here`.
+Those bugs are **not open** — each was found and corrected before these tests were written. The
+test exists so the bug cannot return: a fix with no test is one well-meaning "simplification"
+away from being deleted, and the next reader has no way to know why the guard is there. Naming
+the bug in the test is what makes a fix permanent.
+
+Each of those guards was verified by putting the old bug back and confirming the matching test
+fails, so the suite is known to bite rather than merely known to pass.
