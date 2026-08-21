@@ -10,6 +10,7 @@ except ImportError:
 	Laminar = None  # type: ignore
 from pydantic import BaseModel
 
+from browser_use.action_cache import append_executed_action, capture_effect
 from browser_use.agent.views import ActionModel, ActionResult
 from browser_use.browser import BrowserSession
 from browser_use.browser.events import (
@@ -344,6 +345,15 @@ class Tools(Generic[Context]):
 				memory = f'Clicked {element_desc}'
 				logger.info(f'🖱️ {memory}')
 
+				append_executed_action(
+					action='click',
+					index=params.index,
+					text=None,
+					node=node,
+					url=await browser_session.get_current_page_url(),
+					after=await capture_effect(browser_session, node),
+				)
+
 				# Include click coordinates in metadata if available
 				return ActionResult(
 					extracted_content=memory,
@@ -416,6 +426,15 @@ class Tools(Generic[Context]):
 					log_msg = f"Typed '{params.text}'"
 
 				logger.debug(log_msg)
+
+				append_executed_action(
+					action='input',
+					index=params.index,
+					text=params.text if not has_sensitive_data else None,
+					node=node,
+					url=await browser_session.get_current_page_url(),
+					after=await capture_effect(browser_session, node),
+				)
 
 				# Include input coordinates in metadata if available
 				return ActionResult(
