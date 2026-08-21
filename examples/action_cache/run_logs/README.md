@@ -7,6 +7,11 @@ Each site folder holds the full pipeline, one file per stage, so if a step went 
 point at the exact stage that dropped it. That is the difference between "the cache is wrong"
 and "Stage 3 dropped it because the typed value wasn't on the task's list."
 
+> **Why the logs say `site2` and `site3`.** These folders were called `site1`…`site4` while I was
+> working and were renamed afterwards to the site they belong to. The `.log` files still print the
+> old paths, because they are captured stdout and editing them would mean editing the evidence.
+> `site1` is `roboform`, `site2` is `books_toscrape`, `site3` is `saucedemo`, `site4` is `toolshop`.
+
 ---
 
 ## The site folders
