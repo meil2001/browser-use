@@ -5,6 +5,10 @@ deterministic Playwright steps with zero model calls.**
 
 On the Roboform task that is **68,473 tokens and 6 LLM steps, down to 0 and 0.**
 
+**Both bonus items are built:** the automation is generated from the logs rather than
+hand-assembled, and the caching runs in an iterative loop. Details in
+[Bonus items](#bonus-items) below.
+
 An agentic Optexity node hands a natural-language task to browser-use and an LLM, which
 re-derives the whole workflow from scratch on every single run. Most of what it does — type
 the username, click submit — is perfectly deterministic once you know where the fields are.
@@ -65,7 +69,10 @@ automations resolve their values. See `ACTION_CACHE.md` there.
 ## Layout of this folder
 
 ```text
-DESIGN.md            how it works and why, stage by stage
+README.md            this file: overview and index
+DESIGN.md            results, the bugs that shaped the design, known limitations
+PIPELINE.md          step logic — how one run becomes an automation
+LOOP.md              loop logic — how several runs converge on a complete one
 METRICS.md           measured Run 1 vs Run 2, every row citing a log line
 run_repair_loop.py   the iterative loop driver
 
@@ -100,9 +107,22 @@ The full reasoning, including the bugs that shaped each rule, is in [DESIGN.md](
 
 ## Bonus items
 
-Both are built. The cached automation is **generated from the logs** with Pydantic schema
-validation rather than hand-assembled, and the caching runs in a **loop** that rebuilds,
-reruns and recaches until nothing is missing or no further progress is possible.
+Both are built.
+
+**1 — Build the automation automatically instead of by hand.** `emit_cached_automation` in
+`browser_use/action_cache.py` turns the filtered trace into a schema-valid Optexity automation:
+Pydantic-validated, parameterized into `input_parameters`, with `skip_prompt: true` on every
+node it can replay. Nothing in the four cached automations was typed by hand. Where a step
+cannot be cached it emits a prompt-only *gap node* rather than a guessed locator, so the
+generator never invents a selector to look complete.
+
+**2 — Loop instead of caching once.** `run_repair_loop.py` runs the cycle: explore, cache,
+rebuild, review, sharpen the prompt for exactly what is missing, rerun, recache. Each pass
+replays what is already known through Playwright with zero LLM calls and lets the model touch
+only the broken step, so a repair pass costs ~25k tokens instead of re-deriving the workflow.
+It stops when nothing is missing, or when a pass adds no working locator — which is how Books
+to Scrape was reported impossible rather than faked. Loop transcripts are in
+`run_logs/*/loop.log`; the design is in [LOOP.md](LOOP.md).
 
 ## Running it
 

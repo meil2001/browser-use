@@ -17,6 +17,11 @@
 >
 > Tested on four sites: a form fill, a login-and-cart flow, a search-and-pick flow, and one
 > task that turned out to be impossible, which the loop reported rather than faking.
+>
+> **Both bonus items are built** — the automation is generated from the cache logs with Pydantic
+> validation rather than by hand, and the caching runs in an iterative loop that rebuilds and
+> reruns until nothing is missing or no further progress is possible.
+>
 > Companion changes live in the [`optexity`](https://github.com/meil2001/optexity) fork.
 >
 > *Everything below this line is the upstream browser-use README.*
