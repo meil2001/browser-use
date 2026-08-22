@@ -2,17 +2,22 @@
 >
 > **A memory layer for agentic automations.** Run 1 explores with an LLM, we record what the
 > browser actually did, and Run 2 replays it as deterministic Playwright steps with **zero model
-> calls**. On the Roboform task that is **68,473 tokens and 6 LLM steps down to 0 and 0.**
+> calls**. On the Roboform task that is **68,473 tokens and 6 LLM steps down to 0 and 0** (V1);
+> the **V2 four-site retest** (Phases 1–4) totals **518,205 campaign tokens → 0 on every replayable
+> node**, with **74 unit tests** on the filter pipeline.
 >
 > ### → Start here: [`examples/action_cache/README.md`](examples/action_cache/README.md)
 >
 > | | |
 > |---|---|
 > | How it works, and why | [`examples/action_cache/DESIGN.md`](examples/action_cache/DESIGN.md) |
-> | Measured Run 1 vs Run 2 | [`examples/action_cache/METRICS.md`](examples/action_cache/METRICS.md) |
+> | V2 revision (phases 1–4) | [`examples/action_cache/VERSION2.md`](examples/action_cache/VERSION2.md) |
+> | Measured Run 1 vs Run 2 (V1) | [`examples/action_cache/METRICS.md`](examples/action_cache/METRICS.md) |
+> | V2 four-site retest (Aug 2026) | [`examples/action_cache/METRICS_V2.md`](examples/action_cache/METRICS_V2.md) |
 > | The automations, before and after | [`examples/action_cache/automations/`](examples/action_cache/automations/) |
 > | The evidence behind every locator | [`examples/action_cache/run_logs/`](examples/action_cache/run_logs/) |
 > | The pipeline itself | [`browser_use/action_cache.py`](browser_use/action_cache.py) |
+> | Unit tests (74, no browser) | [`tests/ci/test_action_cache.py`](tests/ci/test_action_cache.py) |
 > | The iterative loop | [`examples/action_cache/run_repair_loop.py`](examples/action_cache/run_repair_loop.py) |
 >
 > Tested on four sites: a form fill, a login-and-cart flow, a search-and-pick flow, and one

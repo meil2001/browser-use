@@ -39,7 +39,22 @@ Two rules hold everywhere in this code:
 | the raw evidence each locator came from | **[run_logs/README.md](run_logs/README.md)** |
 | the one-off scripts used to diagnose failures | **[run_logs/diagnostics/README.md](run_logs/diagnostics/README.md)** |
 
-## Results at a glance
+## Results at a glance (V2 — Aug 2026)
+
+Four-site retest after Phases 1–4. Every Run 2 row is **0 LLM tokens**. Full provenance:
+**[METRICS_V2.md](METRICS_V2.md)**.
+
+| Site | Workflow | V2 Run 1 (campaign) | V2 Run 2 | Outcome |
+|---|---|---|---|---|
+| Roboform | fill 4 form fields | 6 steps, 68,574 tok | 4 nodes, 0 tok, 15.3 s | complete in one pass |
+| Saucedemo | login → add named product → cart | 7 steps, 72,748 tok | 5 nodes, 0 tok, 10.5 s | complete in one pass |
+| Toolshop | search → pick 1 of 4 → add → cart | 7+3 steps, 116,601 tok | 4 nodes, 0 tok, 38.5 s | complete after 1 repair |
+| Books to Scrape | category → book → basket | 10+6+6 steps, 239,282 tok | 2 of 3 nodes, 0 tok, 10.7 s | **reported impossible** |
+
+**V2 campaign total (4 sites): 518,205 tokens** vs V1 **696,679** ([METRICS.md](METRICS.md)).
+What changed in code: **[VERSION2.md](VERSION2.md)**.
+
+## V1 baseline (original submission)
 
 | Site | Workflow | Run 1 | Run 2 | Outcome |
 |---|---|---|---|---|
@@ -75,7 +90,9 @@ README.md            this file: overview and index
 DESIGN.md            results, the bugs that shaped the design, known limitations
 PIPELINE.md          step logic — how one run becomes an automation
 LOOP.md              loop logic — how several runs converge on a complete one
-METRICS.md           measured Run 1 vs Run 2, every row citing a log line
+METRICS.md           measured Run 1 vs Run 2 (V1 baseline), every row citing a log line
+VERSION2.md          V2 revision: phases 1–4, what changed and what did not
+METRICS_V2.md        V2 four-site retest numbers (Aug 2026)
 run_repair_loop.py   the iterative loop driver
 
 automations/         every automation, agentic and cached, in one place
@@ -144,7 +161,7 @@ ones: every cached node carries `skip_prompt: true` and none is an `agentic_task
 ## Tests
 
 ```bash
-pytest tests/ci/test_action_cache.py -q     # 59 tests, ~0.1 s, no browser or network
+pytest tests/ci/test_action_cache.py -q     # 74 tests, ~0.1 s, no browser or network
 ```
 
 The four live sites prove the happy path and little else. Every bug this actually hit was an

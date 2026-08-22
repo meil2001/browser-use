@@ -122,15 +122,17 @@ V1. No code changes during the retest window.
 
 | Site | Folder | V1 campaign tokens | V2 campaign tokens | Final automation |
 |---|---|---|---|---|
-| Roboform (site1) | `run_logs/site1` | 68,473 | 68,574 | 4 nodes, 0 gaps — **byte-identical** cached JSON |
-| Books (site2) | `run_logs/site2` | 324,920 | 239,282 | 3 nodes (2 + gap) — same intentional stop |
-| Saucedemo (site3) | `run_logs/site3` | 199,138 | 72,748 | 5 nodes, 0 gaps — complete in pass 0 |
-| Toolshop (site4) | `run_logs/site4` | 104,148 | 116,601 | 4 nodes, 0 gaps — complete after 1 repair |
+| Roboform | `run_logs/roboform` | 68,473 | 68,574 | 4 nodes, 0 gaps — **byte-identical** cached JSON |
+| Books to Scrape | `run_logs/books_toscrape` | 324,920 | 239,282 | 3 nodes (2 + gap) — same intentional stop |
+| Saucedemo | `run_logs/saucedemo` | 199,138 | 72,748 | 5 nodes, 0 gaps — complete in pass 0 |
+| Toolshop | `run_logs/toolshop` | 104,148 | 116,601 | 4 nodes, 0 gaps — complete after 1 repair |
 
 Full tables, log line references, and Run 2 wall times: **[METRICS_V2.md](METRICS_V2.md)**.
 
-Archives of pre-retest artifacts: `run_logs/<site>/archive_before_retest_20260822/` in the
-assignment workspace (and equivalent paths under `examples/action_cache/run_logs/` when synced).
+Archives of pre-retest artifacts:
+`examples/action_cache/run_logs/<site>/archive_before_retest_20260822/` (V1-era `loop.log` in
+each). Older local notes may label these folders `site1`…`site4`; the repo uses the site names
+above.
 
 ---
 
