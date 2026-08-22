@@ -24,8 +24,8 @@
       "type": "action_node",
       "interaction_action": {
         "click_element": {
-          "command": "locator(\"xpath=html/body/app-root/div[2]/app-overview/div[3]/div[2]/div[1]/a[5]\").first",
-          "prompt_instructions": "Click the element Slip Joint Pliers Compare Slip Joint Pliers CO₂: A B C D E $ (xpath=html/body/app-root/div[2]/app-overview/div[3]/div[2]/div[1]/a[5])",
+          "command": "locator(\"[data-test=\\\"product-01M0JM8ANV543S4695PP78M3CK\\\"]\").first",
+          "prompt_instructions": "Click the element Slip Joint Pliers Compare Slip Joint Pliers CO₂: A B C D E $ (data-test=product-01M0JM8ANV543S4695PP78M3CK)",
           "skip_prompt": true
         }
       }
@@ -44,8 +44,8 @@
       "type": "action_node",
       "interaction_action": {
         "click_element": {
-          "command": "locator(\"xpath=html/body/app-root/app-header/nav/div/div/ul/li[5]/a\").first",
-          "prompt_instructions": "Click the element cart (xpath=html/body/app-root/app-header/nav/div/div/ul/li[5]/a)",
+          "command": "locator(\"[data-test=\\\"nav-cart\\\"]\").first",
+          "prompt_instructions": "Click the element cart (data-test=nav-cart)",
           "skip_prompt": true
         }
       }

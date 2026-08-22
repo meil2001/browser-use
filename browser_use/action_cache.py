@@ -1,7 +1,7 @@
 """Log executed browser-use actions with live DOM identity.
 
 Stage 1: write JSONL at execute-time (not by parsing terminal logs).
-Stage 2: add a stable identity key (name > id > placeholder > xpath). Index is debug-only.
+Stage 2: add a stable identity key (name > id > placeholder > test hooks > xpath). Index is debug-only.
 Later stages: filter, rank locators, emit Optexity JSON.
 """
 
@@ -51,6 +51,16 @@ _RESERVED_PARAM_NAMES = {"current_page_url", "current_time", "task_id"}
 
 # Prefer attributes that survive a page reload. Never use LLM index here.
 _IDENTITY_ATTR_ORDER = ("name", "id", "placeholder")
+# Playwright's get_by_test_id maps to data-testid; other hooks use attribute selectors.
+_TEST_ID_ATTRS = ("data-testid", "data-test-id")
+_DATA_HOOK_ATTRS = ("data-test", "data-cy", "data-qa")
+_TAG_TO_ROLE = {
+	"a": "link",
+	"button": "button",
+	"input": "textbox",
+	"select": "combobox",
+	"textarea": "textbox",
+}
 
 # What the page calls this field, used to match a task role ("city") to a box.
 _LABEL_ATTR_ORDER = ("aria-label", "title", "placeholder")
@@ -58,6 +68,45 @@ _LABEL_LOOKUP_DEPTH = 4
 _LABEL_MAX_LEN = 60
 _NON_LABEL_TAGS = {"input", "select", "textarea", "button", "script", "style", "svg"}
 _ROLE_STOPWORDS = {"the", "a", "an", "of", "field", "box"}
+_SENSITIVE_INPUT_TYPES = frozenset({"password"})
+
+
+def is_sensitive_field(record: dict[str, Any]) -> bool:
+	"""Password and credential fields: keep the locator, never persist the typed value."""
+	attrs = record.get("attributes") or {}
+	input_type = (attrs.get("type") or "").strip().lower()
+	if input_type in _SENSITIVE_INPUT_TYPES:
+		return True
+	label = (record.get("label") or "").strip().lower()
+	if "password" in label:
+		return True
+	ident = record.get("identity") or {}
+	by = (ident.get("by") or "").strip().lower()
+	value = (ident.get("value") or "").strip().lower()
+	if by in {"name", "id", "placeholder"} and "password" in value:
+		return True
+	for key in ("name", "id", "placeholder", "data-test"):
+		attr = (attrs.get(key) or "").strip().lower()
+		if "password" in attr:
+			return True
+	return False
+
+
+def redact_sensitive_record(record: dict[str, Any]) -> dict[str, Any]:
+	"""Strip credential payloads before a row is written or sent to a model digest."""
+	out = dict(record)
+	if out.get("action") == "input" and is_sensitive_field(out):
+		out["text"] = None
+		after = out.get("after")
+		if isinstance(after, dict):
+			after = dict(after)
+			target = after.get("target")
+			if isinstance(target, dict):
+				target = dict(target)
+				target["value"] = None
+				after["target"] = target
+			out["after"] = after
+	return out
 
 
 def cache_path() -> Path:
@@ -119,6 +168,14 @@ def stable_identity(
 		value = (attrs.get(attr) or "").strip()
 		if value:
 			return {"by": attr, "value": value}
+	for attr in _TEST_ID_ATTRS:
+		value = (attrs.get(attr) or "").strip()
+		if value:
+			return {"by": "data-testid", "value": value}
+	for attr in _DATA_HOOK_ATTRS:
+		value = (attrs.get(attr) or "").strip()
+		if value:
+			return {"by": attr, "value": value}
 	if shadow_hosts:
 		host = next((h for h in reversed(shadow_hosts) if h.get("name") or h.get("id")), None)
 		if host:
@@ -130,6 +187,28 @@ def stable_identity(
 	if xpath.strip():
 		return {"by": "xpath", "value": xpath}
 	return None
+
+
+def resolve_identity(record: dict[str, Any]) -> dict[str, Any] | None:
+	"""Best durable handle for a cache row, using everything the hook captured.
+
+	Rows written before test-hook priority existed may still carry xpath as
+	`identity`; this re-reads `attributes` at compile time so old traces upgrade
+	without another site run.
+	"""
+	ident = stable_identity(
+		record.get("attributes") or {},
+		record.get("xpath") or "",
+		record.get("shadow_hosts") or [],
+	)
+	if ident and ident.get("by") != "xpath":
+		return ident
+	label = _clean_label(record.get("label"))
+	tag = (record.get("tag") or "").lower()
+	role = _TAG_TO_ROLE.get(tag)
+	if role and label and 3 <= len(label) <= _LABEL_MAX_LEN and not label.isdigit():
+		return {"by": "role", "role": role, "value": label}
+	return ident
 
 
 def _clean_label(raw: str | None) -> str:
@@ -293,6 +372,7 @@ def append_executed_action(
 			record.update(node_identity(node))
 		else:
 			record["identity"] = None
+		record = redact_sensitive_record(record)
 		path = cache_path()
 		path.parent.mkdir(parents=True, exist_ok=True)
 		with path.open("a", encoding="utf-8") as f:
@@ -506,12 +586,13 @@ def trace_digest(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
 	"""
 	digest = []
 	for i, record in enumerate(records):
+		row = redact_sensitive_record(record)
 		entry = {
 			"i": i,
-			"action": record.get("action"),
-			"label": (record.get("label") or "").strip(),
-			"text": record.get("text"),
-			"url": record.get("url"),
+			"action": row.get("action"),
+			"label": (row.get("label") or "").strip(),
+			"text": row.get("text"),
+			"url": row.get("url"),
 		}
 		# What the action *did*, when we know. Without this the model can only see
 		# that something was attempted, which is why ten dead clicks on "Add to cart"
@@ -672,8 +753,23 @@ def _regex_task_spec(task: str) -> list[dict[str, str]]:
 	return [{"role": roles.get(v, ""), "value": v} for v in task_values_from_text(task)]
 
 
+def _canonical_digest(digest: list[dict[str, Any]]) -> list[dict[str, Any]]:
+	"""Fingerprint input: password rows never carry literal text."""
+	out: list[dict[str, Any]] = []
+	for entry in digest:
+		row = dict(entry)
+		if (row.get("label") or "").strip().lower() == "password":
+			row["text"] = None
+		out.append(row)
+	return out
+
+
 def _review_fingerprint(task: str, digest: list[dict[str, Any]]) -> str:
-	blob = json.dumps({"task": task, "trace": digest}, ensure_ascii=False, sort_keys=True)
+	blob = json.dumps(
+		{"task": task, "trace": _canonical_digest(digest)},
+		ensure_ascii=False,
+		sort_keys=True,
+	)
 	return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
@@ -702,6 +798,10 @@ def load_run_review(
 		try:
 			cached = json.loads(path.read_text(encoding="utf-8"))
 			if cached.get("fingerprint") == fingerprint:
+				return cached
+			# Reviews saved before password redaction may still list the literal in
+			# `trace`; canonicalize both sides so recompile does not call the LLM again.
+			if _review_fingerprint(task, cached.get("trace") or []) == fingerprint:
 				return cached
 		except Exception:
 			logger.warning("run review cache unreadable, regenerating", exc_info=True)
@@ -977,8 +1077,47 @@ def improve_repair_prompt(
 	return {"prompt": prompt, "source": source, "repeated": repeated}
 
 
-def is_on_task(record: dict[str, Any], allowed: tuple[str, ...] | list[str]) -> bool:
-	"""Stage 3: keep clicks; keep inputs only if typed text is a task value.
+def click_evidence_indices(review: dict[str, Any]) -> set[int]:
+	"""Trace rows the step reviewer credited to a task step (covered or unverifiable)."""
+	indices: set[int] = set()
+	for step in review.get("steps") or []:
+		evidence = step.get("evidence")
+		if isinstance(evidence, int) and step.get("verdict") in ("covered", "unverifiable"):
+			indices.add(evidence)
+	return indices
+
+
+def _click_on_task(
+	record: dict[str, Any],
+	raw_index: int | None,
+	review: dict[str, Any] | None,
+) -> bool:
+	"""Stage 3 for clicks: keep only rows the step review pointed at.
+
+	Fails open in every case where the evidence is absent rather than negative,
+	for the same reason `allowed` being empty keeps every input: "the reviewer
+	told us nothing" is indistinguishable from "the reviewer broke", and
+	over-keeping is visible in coverage while over-dropping is silent. A review
+	that cites zero trace rows — no steps, or every step `missing` — is treated
+	as no information, not as proof that every click was junk.
+	"""
+	if review is None or not (review.get("summary") or {}).get("available"):
+		return True
+	if raw_index is None:
+		return True
+	credited = click_evidence_indices(review)
+	if not credited:
+		return True
+	return raw_index in credited
+
+
+def is_on_task(
+	record: dict[str, Any],
+	allowed: tuple[str, ...] | list[str],
+	raw_index: int | None = None,
+	review: dict[str, Any] | None = None,
+) -> bool:
+	"""Stage 3: filter inputs by task values; filter clicks by step-review evidence.
 
 	An empty `allowed` means "we don't know what's required" (extraction
 	found nothing), not "reject everything typed." Dropping every input when
@@ -987,7 +1126,13 @@ def is_on_task(record: dict[str, Any], allowed: tuple[str, ...] | list[str]) -> 
 	instead is recoverable: Stage 6.5's `extra` field will show whatever
 	showed up, for a human to check.
 	"""
-	if record.get("action") != "input":
+	action = record.get("action")
+	if action == "click":
+		return _click_on_task(record, raw_index, review)
+	if action != "input":
+		return True
+	# Locator only — the value comes from input_parameters, not from the log row.
+	if is_sensitive_field(record):
 		return True
 	if not allowed:
 		return True
@@ -1015,20 +1160,46 @@ def align_cache(
 	src: Path | None = None,
 	dst: Path | None = None,
 	allowed: tuple[str, ...] | None = None,
+	review: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
 	"""Write on-task records to action_cache_aligned.jsonl. Does not last-write-wins (Stage 4)."""
 	src = src or cache_path()
 	dst = dst or _ALIGNED_PATH
 	allowed = allowed if allowed is not None else required_values_and_roles()[0]
+	review = review if review is not None else load_run_review()
 	raw = annotate_effects(read_jsonl(src))
-	kept = [r for r in raw if is_on_task(r, allowed)]
+	# Click filtering matches `review.trace` positions to rows of this file, and the
+	# review is always built from `cache_path()`. Reading a different source would
+	# still produce indices, just ones pointing at the wrong actions — so drop the
+	# index rule rather than filter confidently against a misaligned trace.
+	aligned_to_review = src.resolve() == cache_path().resolve()
+	if not aligned_to_review:
+		logger.info(
+			"stage3 src %s is not the reviewed log; keeping all clicks (no index alignment)",
+			src,
+		)
+	kept: list[dict[str, Any]] = []
+	click_dropped = 0
+	for index, record in enumerate(raw):
+		position = index if aligned_to_review else None
+		if is_on_task(record, allowed, raw_index=position, review=review):
+			kept.append(record)
+		elif record.get("action") == "click":
+			click_dropped += 1
+			logger.info(
+				"stage3 dropped off-task click trace[%s] label=%r identity=%s",
+				index,
+				record.get("label"),
+				record.get("identity"),
+			)
 	dropped = len(raw) - len(kept)
 	write_jsonl(dst, kept)
 	logger.info(
-		"stage3 align: %s raw -> %s kept, %s dropped, values=%s -> %s",
+		"stage3 align: %s raw -> %s kept, %s dropped (%s off-task clicks), values=%s -> %s",
 		len(raw),
 		len(kept),
 		dropped,
+		click_dropped,
 		allowed,
 		dst,
 	)
@@ -1095,6 +1266,11 @@ def action_effect(
 	typed_ok: bool | None = None
 	if action == "input" and isinstance(target, dict) and record.get("text") is not None:
 		typed_ok = (target.get("value") or "") == record["text"]
+	elif action == "input" and is_sensitive_field(record) and isinstance(target, dict) and target.get(
+		"present"
+	):
+		# Value is intentionally absent from the log; presence of the field is enough.
+		typed_ok = True
 
 	# Only actions that *can* navigate get credit for a navigation. Typing into a field
 	# cannot move the page, so when a url change straddles a typing action it came from
@@ -1230,8 +1406,12 @@ def best_write_per_input_text(
 	"""
 	roles = roles if roles is not None else required_values_and_roles()[1]
 	best: dict[str, tuple[int, int]] = {}
+	keep: set[int] = set()
 	for position, record in enumerate(records):
 		if record.get("action") != "input":
+			continue
+		if is_sensitive_field(record):
+			keep.add(position)
 			continue
 		text = (record.get("text") or "").strip()
 		if not text:
@@ -1241,7 +1421,7 @@ def best_write_per_input_text(
 		candidate = (score, position)
 		if best.get(text) is None or candidate > best[text]:
 			best[text] = candidate
-	keep = {position for _, position in best.values()}
+	keep.update(position for _, position in best.values())
 	kept_score = {text: score for text, (score, _) in best.items()}
 	out: list[dict[str, Any]] = []
 	dropped = 0
@@ -1298,6 +1478,16 @@ def playwright_command(identity: dict[str, Any] | None) -> str | None:
 			selector = f"[id={json.dumps(value)}]"
 	elif by == "placeholder":
 		selector = f"[placeholder={json.dumps(value)}]"
+	elif by == "data-testid":
+		return f"get_by_test_id({json.dumps(value)}).first"
+	elif by in _DATA_HOOK_ATTRS:
+		selector = f"[{by}={json.dumps(value)}]"
+		return f"locator({json.dumps(selector)}).first"
+	elif by == "role":
+		role = identity.get("role") or _TAG_TO_ROLE.get("button") or "button"
+		return f"get_by_role({json.dumps(role)}, name={json.dumps(value)}).first"
+	elif by == "label":
+		return f"get_by_label({json.dumps(value)}).first"
 	elif by == "xpath":
 		selector = f"xpath={value}"
 	elif by == "shadow_host":
@@ -1317,7 +1507,9 @@ def locate_cache(
 	located: list[dict[str, Any]] = []
 	for record in sliced:
 		row = dict(record)
-		row["command"] = playwright_command(record.get("identity"))
+		identity = resolve_identity(row)
+		row["identity"] = identity
+		row["command"] = playwright_command(identity)
 		if row["command"] is None:
 			logger.warning("stage5 skipped record with no command: %s", record.get("identity"))
 			continue
@@ -1327,8 +1519,15 @@ def locate_cache(
 	return located
 
 
-def cached_input_texts(located: list[dict[str, Any]]) -> list[str]:
-	"""Unique on-task input texts in first-seen (sliced) order."""
+def cached_input_texts(
+	located: list[dict[str, Any]],
+	review: dict[str, Any] | None = None,
+) -> list[str]:
+	"""Unique on-task input texts in first-seen (sliced) order.
+
+	Password fields are redacted from `text` in the log; when a sensitive row is
+	present, the matching value from the task review counts as cached for coverage.
+	"""
 	texts: list[str] = []
 	seen: set[str] = set()
 	for record in located:
@@ -1339,6 +1538,24 @@ def cached_input_texts(located: list[dict[str, Any]]) -> list[str]:
 			continue
 		seen.add(text)
 		texts.append(text)
+	if review:
+		label_to_value = {
+			(item.get("role") or "").strip().lower(): (item.get("value") or "").strip()
+			for item in review.get("values") or []
+		}
+		for record in located:
+			if record.get("action") != "input" or not is_sensitive_field(record):
+				continue
+			label = (record.get("label") or "").strip().lower()
+			value = label_to_value.get(label)
+			if not value:
+				for role, val in label_to_value.items():
+					if role and (role == label or role in label or label in role):
+						value = val
+						break
+			if value and value not in seen:
+				seen.add(value)
+				texts.append(value)
 	return texts
 
 
@@ -1400,12 +1617,12 @@ def coverage_report(
 	the count check that needs no model at all.
 	"""
 	required_list = list(required if required is not None else required_values_and_roles()[0])
-	cached = cached_input_texts(located)
+	review = review if review is not None else load_run_review()
+	cached = cached_input_texts(located, review=review)
 	cached_set = set(cached)
 	required_set = set(required_list)
 	missing = [v for v in required_list if v not in cached_set]
 	extra = [v for v in cached if v not in required_set]
-	review = review if review is not None else load_run_review()
 	return {
 		"required": required_list,
 		"cached": cached,
@@ -1585,6 +1802,221 @@ def record_to_action_node(record: dict[str, Any], param_name: str | None = None)
 	return None
 
 
+def _param_name_for_input_record(
+	record: dict[str, Any],
+	value_to_param: dict[str, str],
+	roles: dict[str, str],
+) -> str | None:
+	text = (record.get("text") or "").strip()
+	if text:
+		return value_to_param.get(text)
+	if not is_sensitive_field(record):
+		return None
+	label = (record.get("label") or "").strip().lower()
+	for value, param in value_to_param.items():
+		role = (roles.get(value) or "").strip().lower()
+		if role and (role == label or role in label or label in role):
+			return param
+	return None
+
+
+def _located_by_identity(located: list[dict[str, Any]]) -> dict[tuple[str, ...], dict[str, Any]]:
+	by_key: dict[tuple[str, ...], dict[str, Any]] = {}
+	for record in located:
+		key = identity_key(record)
+		if key is not None:
+			by_key[key] = record
+	return by_key
+
+
+def _evidence_to_located(
+	located: list[dict[str, Any]],
+	raw_cache: list[dict[str, Any]],
+) -> dict[int, dict[str, Any]]:
+	"""Map trace digest index (from run review) -> located cache row."""
+	by_key = _located_by_identity(located)
+	mapping: dict[int, dict[str, Any]] = {}
+	for index, raw in enumerate(raw_cache):
+		row = dict(raw)
+		identity = resolve_identity(row) or row.get("identity")
+		if not identity:
+			continue
+		key = identity_key({**row, "identity": identity})
+		if key is None:
+			continue
+		match = by_key.get(key)
+		if match is not None:
+			mapping[index] = match
+	return mapping
+
+
+def _missing_value_for_input_step(
+	step: dict[str, Any],
+	review: dict[str, Any],
+	missing_values: list[str],
+) -> str | None:
+	target = (step.get("expected_target") or "").strip()
+	description = step.get("description") or ""
+	for value in missing_values:
+		for item in review.get("values") or []:
+			if item.get("value") != value:
+				continue
+			role = (item.get("role") or "").strip()
+			if role and (role == target or role in target or role in description):
+				return value
+			if value in description:
+				return value
+	return None
+
+
+def _node_from_record(
+	record: dict[str, Any],
+	value_to_param: dict[str, str],
+	roles: dict[str, str],
+) -> dict[str, Any]:
+	param_name = None
+	if record.get("action") == "input":
+		param_name = _param_name_for_input_record(record, value_to_param, roles)
+		text = (record.get("text") or "").strip()
+		if param_name is None and text:
+			param_name = value_to_param.get(text)
+	node = record_to_action_node(record, param_name)
+	if node is None:
+		raise ValueError(f"Stage 6: cache row has no command: {record.get('identity')}")
+	return node
+
+
+def _emit_located_nodes_legacy(
+	located: list[dict[str, Any]],
+	review: dict[str, Any],
+	value_to_param: dict[str, str],
+	roles: dict[str, str],
+	report: dict[str, Any],
+) -> list[dict[str, Any]]:
+	"""Original emit order: all located rows, then step gaps, then value gaps."""
+	nodes: list[dict[str, Any]] = []
+	for record in located:
+		nodes.append(_node_from_record(record, value_to_param, roles))
+	for step in missing_steps(review):
+		if step["kind"] == "input":
+			continue
+		nodes.append(step_gap_node(step))
+		logger.info(
+			"stage6.5 appended gap node for missing step %r (prompt from %s, no command)",
+			step["description"],
+			step["repair_prompt_source"],
+		)
+	for value in report["missing"]:
+		if value not in value_to_param:
+			value_to_param[value] = _unique_param_name(
+				_param_base_name(value, roles), set(value_to_param.values())
+			)
+		param_name = value_to_param[value]
+		nodes.append(
+			gap_action_node(value, report["cached"], role=roles.get(value), param_name=param_name)
+		)
+		logger.info(
+			"stage6.5 appended gap node for missing value %r role=%r param=%r (no command)",
+			value,
+			roles.get(value),
+			param_name,
+		)
+	return nodes
+
+
+def _emit_nodes_in_step_order(
+	located: list[dict[str, Any]],
+	review: dict[str, Any],
+	raw_cache: list[dict[str, Any]],
+	value_to_param: dict[str, str],
+	roles: dict[str, str],
+	report: dict[str, Any],
+) -> list[dict[str, Any]]:
+	"""Build nodes in task step order; gaps sit where the step failed, not at the end."""
+	evidence_map = _evidence_to_located(located, raw_cache)
+	used_keys: set[tuple[str, ...]] = set()
+	value_gaps_emitted: set[str] = set()
+	nodes: list[dict[str, Any]] = []
+
+	for step in review.get("steps") or []:
+		verdict = step.get("verdict")
+		kind = step.get("kind")
+
+		if verdict == "missing":
+			if kind == "input":
+				value = _missing_value_for_input_step(step, review, report["missing"])
+				if value and value not in value_gaps_emitted:
+					if value not in value_to_param:
+						value_to_param[value] = _unique_param_name(
+							_param_base_name(value, roles), set(value_to_param.values())
+						)
+					param_name = value_to_param[value]
+					nodes.append(
+						gap_action_node(
+							value,
+							report["cached"],
+							role=roles.get(value),
+							param_name=param_name,
+						)
+					)
+					value_gaps_emitted.add(value)
+					logger.info(
+						"stage6.5 inserted gap node at step %r for missing value %r param=%r (no command)",
+						step["description"],
+						value,
+						param_name,
+					)
+				continue
+			if step.get("repair_prompt"):
+				nodes.append(step_gap_node(step))
+				logger.info(
+					"stage6.5 inserted gap node at step %r (prompt from %s, no command)",
+					step["description"],
+					step["repair_prompt_source"],
+				)
+			continue
+
+		if verdict in ("covered", "unverifiable"):
+			evidence = step.get("evidence")
+			if not isinstance(evidence, int):
+				continue
+			record = evidence_map.get(evidence)
+			if record is None:
+				continue
+			key = identity_key(record)
+			if key is None or key in used_keys:
+				continue
+			nodes.append(_node_from_record(record, value_to_param, roles))
+			used_keys.add(key)
+
+	# Steps the reviewer did not map still have real locators — keep them in slice order.
+	for record in located:
+		key = identity_key(record)
+		if key is None or key in used_keys:
+			continue
+		nodes.append(_node_from_record(record, value_to_param, roles))
+		used_keys.add(key)
+
+	for value in report["missing"]:
+		if value in value_gaps_emitted:
+			continue
+		if value not in value_to_param:
+			value_to_param[value] = _unique_param_name(
+				_param_base_name(value, roles), set(value_to_param.values())
+			)
+		param_name = value_to_param[value]
+		nodes.append(
+			gap_action_node(value, report["cached"], role=roles.get(value), param_name=param_name)
+		)
+		logger.info(
+			"stage6.5 appended gap node for missing value %r role=%r param=%r (no command)",
+			value,
+			roles.get(value),
+			param_name,
+		)
+	return nodes
+
+
 def emit_cached_automation(
 	src: Path | None = None,
 	dst: Path | None = None,
@@ -1593,12 +2025,12 @@ def emit_cached_automation(
 	"""Stage 6: located JSONL -> test_automation_cached.json (no invented locators).
 
 	Stage 6.5: write coverage.json. Missing task values *and* missing task steps
-	become prompt-only gap nodes (skip_command, no locator) appended last.
+	become prompt-only gap nodes (skip_command, no locator). When step review is
+	available, gaps are inserted at their step position; otherwise they append last.
 	"""
 	src = src or _LOCATED_PATH
 	dst = dst or _CACHED_AUTOMATION_PATH
 	located = read_jsonl(src)
-	nodes: list[dict[str, Any]] = []
 	# Where replay starts, in order of trust: what the automation declares, then the
 	# first recorded url, then the original demo target. The declared url has to win —
 	# the first record's url is where the run *landed* after its opening action, not
@@ -1629,46 +2061,35 @@ def emit_cached_automation(
 		for r in located
 		if r.get("action") == "input" and (r.get("text") or "").strip()
 	]
-	value_to_param = build_param_names(on_task_values, roles)
-
 	for record in located:
-		text = (record.get("text") or "").strip() if record.get("action") == "input" else ""
-		node = record_to_action_node(record, value_to_param.get(text))
-		if node is None:
-			raise ValueError(f"Stage 6: cache row has no command: {record.get('identity')}")
-		nodes.append(node)
-	if not nodes:
-		raise ValueError("Stage 6: no located records to emit")
+		if record.get("action") != "input" or not is_sensitive_field(record):
+			continue
+		label = (record.get("label") or "").strip().lower()
+		for item in review.get("values") or []:
+			value = (item.get("value") or "").strip()
+			if not value or value in on_task_values:
+				continue
+			role = (item.get("role") or "").strip().lower()
+			if role and (role == label or role in label or label in role):
+				on_task_values.append(value)
+	value_to_param = build_param_names(on_task_values, roles)
 
 	report = coverage_report(
 		located, required=tuple(item["value"] for item in review["values"]), review=review
 	)
 	write_coverage(report, coverage_dst)
-	# A missing *step* (a click that never happened) gets the same treatment as
-	# a missing value: one prompt-only node, no invented locator. Input-kind
-	# steps are left to the value path below so a hole is never filled twice.
-	for step in missing_steps(review):
-		if step["kind"] == "input":
-			continue
-		nodes.append(step_gap_node(step))
-		logger.info(
-			"stage6.5 appended gap node for missing step %r (prompt from %s, no command)",
-			step["description"],
-			step["repair_prompt_source"],
+
+	step_summary = review.get("summary") or {}
+	if step_summary.get("available") and review.get("steps"):
+		raw_cache = read_jsonl(cache_path())
+		nodes = _emit_nodes_in_step_order(
+			located, review, raw_cache, value_to_param, roles, report
 		)
-	for value in report["missing"]:
-		if value not in value_to_param:
-			value_to_param[value] = _unique_param_name(
-				_param_base_name(value, roles), set(value_to_param.values())
-			)
-		param_name = value_to_param[value]
-		nodes.append(gap_action_node(value, report["cached"], role=roles.get(value), param_name=param_name))
-		logger.info(
-			"stage6.5 appended gap node for missing value %r role=%r param=%r (no command)",
-			value,
-			roles.get(value),
-			param_name,
-		)
+	else:
+		nodes = _emit_located_nodes_legacy(located, review, value_to_param, roles, report)
+
+	if not nodes:
+		raise ValueError("Stage 6: no located records to emit")
 
 	input_parameters = {name: [value] for value, name in value_to_param.items()}
 	automation = {
@@ -1683,11 +2104,17 @@ def emit_cached_automation(
 	except ImportError:
 		pass
 	dst.write_text(json.dumps(automation, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+	gap_count = sum(
+		1
+		for node in nodes
+		for action in node.get("interaction_action", {}).values()
+		if action.get("skip_command")
+	)
 	logger.info(
 		"stage6 wrote %s nodes (%s locator, %s gap) -> %s",
 		len(nodes),
 		len(located),
-		len(report["missing"]),
+		gap_count,
 		dst,
 	)
 	return automation

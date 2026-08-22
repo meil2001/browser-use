@@ -30,15 +30,20 @@ from browser_use.action_cache import (
 	annotate_effects,
 	best_write_per_input_text,
 	effect_rank,
+	gap_action_node,
 	identity_key,
 	ineffective_nodes,
 	is_on_task,
+	is_sensitive_field,
 	last_write_per_identity,
 	playwright_command,
 	record_to_action_node,
+	redact_sensitive_record,
 	role_match_score,
+	step_gap_node,
 	stable_identity,
 	task_values_from_text,
+	_emit_nodes_in_step_order,
 	weak_identities,
 )
 
@@ -84,6 +89,13 @@ class TestStableIdentity:
 		ident = stable_identity({"name": "user"}, xpath="html/body/div[3]/input")
 		assert ident["by"] == "name", "a positional xpath must never beat a stable attribute"
 
+	def test_data_test_hook_beats_xpath(self):
+		ident = stable_identity(
+			{"data-test": "nav-cart", "class": "card"},
+			xpath="html/body/app-root/app-header/nav/div/div/ul/li[5]/a",
+		)
+		assert ident == {"by": "data-test", "value": "nav-cart"}
+
 	def test_returns_none_when_there_is_no_handle_at_all(self):
 		"""No handle must mean "we have nothing", never a guess."""
 		assert stable_identity({}, xpath="") is None
@@ -102,6 +114,12 @@ class TestPlaywrightCommand:
 			({"by": "name", "value": "user-name"}, 'locator("[name=\\"user-name\\"]").first'),
 			({"by": "id", "value": "search-query"}, 'locator("#search-query").first'),
 			({"by": "placeholder", "value": "Search"}, 'locator("[placeholder=\\"Search\\"]").first'),
+			({"by": "data-testid", "value": "nav-cart"}, 'get_by_test_id("nav-cart").first'),
+			({"by": "data-test", "value": "add-to-cart"}, 'locator("[data-test=\\"add-to-cart\\"]").first'),
+			(
+				{"by": "role", "role": "link", "value": "Travel"},
+				'get_by_role("link", name="Travel").first',
+			),
 			({"by": "xpath", "value": "html/body/a"}, 'locator("xpath=html/body/a").first'),
 		],
 	)
@@ -119,10 +137,52 @@ class TestPlaywrightCommand:
 
 
 class TestStage3OnTaskFilter:
-	"""Stage 3 keeps clicks and keeps only typed values the task asked for."""
+	"""Stage 3 keeps task inputs and clicks credited by step review."""
 
-	def test_clicks_are_always_kept(self):
-		assert is_on_task(record(action="click"), ("myname",)) is True
+	def test_clicks_are_kept_when_step_review_unavailable(self):
+		review = {"summary": {"available": False}, "steps": []}
+		assert is_on_task(record(action="click"), ("myname",), raw_index=5, review=review) is True
+
+	def test_click_kept_when_step_review_credits_trace_row(self):
+		review = {
+			"summary": {"available": True},
+			"steps": [
+				{
+					"verdict": "covered",
+					"evidence": 3,
+				}
+			],
+		}
+		assert is_on_task(record(action="click"), (), raw_index=3, review=review) is True
+
+	def test_exploratory_click_dropped_when_not_credited_by_review(self):
+		review = {
+			"summary": {"available": True},
+			"steps": [
+				{
+					"verdict": "covered",
+					"evidence": 0,
+				}
+			],
+		}
+		assert is_on_task(record(action="click"), (), raw_index=7, review=review) is False
+
+	def test_a_review_with_no_steps_keeps_every_click(self):
+		"""FIXED, guarded here. `available: True` with an empty step list is what a
+		malformed model reply produces, and reading it as "nothing is credited" deleted
+		every click in the cache — the same silent deletion the `allowed` guard exists to
+		prevent. No citations means no information, not proof of junk."""
+		review = {"summary": {"available": True}, "steps": []}
+		assert is_on_task(record(action="click"), (), raw_index=0, review=review) is True
+
+	def test_a_review_that_cites_nothing_keeps_every_click(self):
+		"""Same rule when steps exist but every one is `missing`: zero citations cannot
+		condemn the whole trace, or one bad review empties the automation."""
+		review = {
+			"summary": {"available": True},
+			"steps": [{"verdict": "missing", "evidence": None}],
+		}
+		assert is_on_task(record(action="click"), (), raw_index=0, review=review) is True
 
 	def test_input_of_a_required_value_is_kept(self):
 		assert is_on_task(record(action="input", text="myname"), ("myname",)) is True
@@ -249,6 +309,21 @@ class TestRoleAwareValueDedupe:
 	def test_clicks_are_untouched_by_value_dedupe(self):
 		rows = [record(action="click"), record(action="click")]
 		assert len(best_write_per_input_text(rows, roles={})) == 2
+
+	def test_redacted_password_survives_value_dedupe(self):
+		rows = [
+			record(
+				action="input",
+				text=None,
+				label="Password",
+				identity={"by": "name", "value": "password"},
+				attributes={"type": "password", "name": "password"},
+			),
+			record(action="input", text="abc", identity={"by": "name", "value": "line1"}),
+		]
+		out = best_write_per_input_text(rows, roles={"abc": "Line 1"})
+		assert len(out) == 2
+		assert out[0]["identity"]["value"] == "password"
 
 	@pytest.mark.parametrize(
 		"role,label,expected",
@@ -400,3 +475,153 @@ class TestEmittedNode:
 	def test_a_record_with_no_command_emits_no_node(self):
 		"""The no-invented-locators rule, at the last place it could be broken."""
 		assert record_to_action_node(record(command=None)) is None
+
+
+class TestSensitiveFields:
+	"""Password fields keep their locator; credential text never lands in the log."""
+
+	def _password_row(self, **overrides):
+		base = record(
+			action="input",
+			text="secret_sauce",
+			label="Password",
+			identity={"by": "name", "value": "password"},
+			attributes={"type": "password", "name": "password", "id": "password"},
+			after={
+				"title": "Login",
+				"interactive": 3,
+				"text_len": 100,
+				"target": {"present": True, "text": "", "value": "secret_sauce", "name": "password"},
+			},
+		)
+		base.update(overrides)
+		return base
+
+	def test_detects_password_fields(self):
+		assert is_sensitive_field(self._password_row()) is True
+		assert is_sensitive_field(record(action="input", text="myname", label="Full Name")) is False
+
+	def test_redact_strips_typed_value_and_probe_value(self):
+		redacted = redact_sensitive_record(self._password_row())
+		assert redacted["text"] is None
+		assert redacted["after"]["target"]["value"] is None
+		assert redacted["identity"]["value"] == "password"
+
+	def test_stage3_keeps_password_row_without_literal_text(self):
+		row = redact_sensitive_record(self._password_row())
+		assert is_on_task(row, ("standard_user", "secret_sauce")) is True
+
+	def test_effect_still_marks_sensitive_input_as_effective(self):
+		before = record(url="https://x/login", after={"title": "Login", "interactive": 3, "text_len": 100})
+		typed = redact_sensitive_record(self._password_row())
+		effect = action_effect(typed, before)
+		assert effect["verdict"] == "effective"
+
+
+class TestGapNodeOrder:
+	"""Stage 6.5 gap nodes land at the step that failed, not always at the end."""
+
+	def test_missing_click_gap_sits_between_covered_steps(self):
+		located = [
+			record(
+				action="click",
+				label="Travel",
+				identity={"by": "role", "value": "Travel", "role": "link"},
+				command="get_by_role(\"link\", name=\"Travel\").first",
+			),
+			record(
+				action="click",
+				label="Done",
+				identity={"by": "role", "value": "Done", "role": "button"},
+				command="get_by_role(\"button\", name=\"Done\").first",
+			),
+		]
+		raw_cache = [
+			record(action="click", label="Travel", identity={"by": "role", "value": "Travel", "role": "link"}),
+			record(action="click", label="Basket", identity={"by": "role", "value": "Add to basket", "role": "button"}),
+			record(action="click", label="Done", identity={"by": "role", "value": "Done", "role": "button"}),
+		]
+		review = {
+			"values": [],
+			"steps": [
+				{
+					"description": "Open Travel",
+					"kind": "click",
+					"verdict": "covered",
+					"evidence": 0,
+					"repair_prompt": None,
+					"repair_prompt_source": None,
+				},
+				{
+					"description": "Add to basket",
+					"kind": "click",
+					"verdict": "missing",
+					"repair_prompt": "Click Add to basket on the detail page.",
+					"repair_prompt_source": "llm",
+				},
+				{
+					"description": "Finish",
+					"kind": "click",
+					"verdict": "covered",
+					"evidence": 2,
+					"repair_prompt": None,
+					"repair_prompt_source": None,
+				},
+			],
+			"summary": {"available": True},
+		}
+		report = {
+			"cached": [],
+			"missing": [],
+			"required": [],
+		}
+		nodes = _emit_nodes_in_step_order(located, review, raw_cache, {}, {}, report)
+		assert len(nodes) == 3
+		assert "Travel" in nodes[0]["interaction_action"]["click_element"]["command"]
+		assert nodes[1]["interaction_action"]["click_element"]["skip_command"] is True
+		assert "Done" in nodes[2]["interaction_action"]["click_element"]["command"]
+
+	def test_missing_value_gap_inserts_at_input_step_not_end(self):
+		located = [
+			record(
+				action="input",
+				text="abc",
+				label="Line 1",
+				identity={"by": "name", "value": "line1"},
+				command="locator(x).first",
+			),
+		]
+		raw_cache = [
+			record(action="input", text="abc", label="Line 1", identity={"by": "name", "value": "line1"}),
+			record(action="input", text="xyz", label="Line 2", identity={"by": "name", "value": "line2"}),
+		]
+		review = {
+			"values": [
+				{"role": "Line 1", "value": "abc"},
+				{"role": "City", "value": "SF"},
+			],
+			"steps": [
+				{
+					"description": "Fill line 1 with abc",
+					"kind": "input",
+					"expected_target": "Line 1",
+					"verdict": "covered",
+					"evidence": 0,
+				},
+				{
+					"description": "Fill city with SF",
+					"kind": "input",
+					"expected_target": "City",
+					"verdict": "missing",
+				},
+			],
+			"summary": {"available": True},
+		}
+		report = {"cached": ["abc"], "missing": ["SF"], "required": ["abc", "SF"]}
+		value_to_param = {"abc": "line_1"}
+		roles = {"abc": "Line 1", "SF": "City"}
+		nodes = _emit_nodes_in_step_order(located, review, raw_cache, value_to_param, roles, report)
+		assert len(nodes) == 2
+		assert nodes[0]["interaction_action"]["input_text"]["skip_prompt"] is True
+		assert nodes[1]["interaction_action"]["input_text"]["skip_command"] is True
+		assert nodes[1]["interaction_action"]["input_text"]["input_text"] == "{city[0]}"

@@ -1,5 +1,5 @@
 {
-  "url": "https://books.toscrape.com/catalogue/category/books/travel_2/index.html",
+  "url": "https://books.toscrape.com/",
   "parameters": {
     "input_parameters": {},
     "generated_parameters": {}
@@ -9,8 +9,8 @@
       "type": "action_node",
       "interaction_action": {
         "click_element": {
-          "command": "locator(\"xpath=html/body/div/div/div/aside/div[2]/ul/li/ul/li[1]/a\").first",
-          "prompt_instructions": "Click the element Travel (xpath=html/body/div/div/div/aside/div[2]/ul/li/ul/li[1]/a)",
+          "command": "get_by_role(\"link\", name=\"Travel\").first",
+          "prompt_instructions": "Click the element Travel (role=Travel)",
           "skip_prompt": true
         }
       }
@@ -19,8 +19,8 @@
       "type": "action_node",
       "interaction_action": {
         "click_element": {
-          "command": "locator(\"xpath=html/body/div/div/div/div/section/div[2]/ol/li[1]/article/h3/a\").first",
-          "prompt_instructions": "Click the element It's Only the Himalayas (xpath=html/body/div/div/div/div/section/div[2]/ol/li[1]/article/h3/a)",
+          "command": "get_by_role(\"link\", name=\"It's Only the Himalayas\").first",
+          "prompt_instructions": "Click the element It's Only the Himalayas (role=It's Only the Himalayas)",
           "skip_prompt": true
         }
       }

@@ -58,18 +58,8 @@
       "type": "action_node",
       "interaction_action": {
         "click_element": {
-          "command": "locator(\"#shopping_cart_container\").first",
-          "prompt_instructions": "Click the element Swag Labs (id=shopping_cart_container)",
-          "skip_prompt": true
-        }
-      }
-    },
-    {
-      "type": "action_node",
-      "interaction_action": {
-        "click_element": {
-          "command": "locator(\"xpath=html/body/div/div/div/div[1]/div[1]/div[3]/a\").first",
-          "prompt_instructions": "Click the element 1 (xpath=html/body/div/div/div/div[1]/div[1]/div[3]/a)",
+          "command": "locator(\"[data-test=\\\"shopping-cart-link\\\"]\").first",
+          "prompt_instructions": "Click the element 1 (data-test=shopping-cart-link)",
           "skip_prompt": true
         }
       }

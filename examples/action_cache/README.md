@@ -33,6 +33,8 @@ Two rules hold everywhere in this code:
 | **step logic** — how one run becomes an automation, stage by stage | **[PIPELINE.md](PIPELINE.md)** |
 | **loop logic** — how several runs converge on a complete automation | **[LOOP.md](LOOP.md)** |
 | the numbers, with a log line behind each one | **[METRICS.md](METRICS.md)** |
+| **V2 revision** — phases 1–4, what changed | **[VERSION2.md](VERSION2.md)** |
+| **V2 numbers** — four-site retest (Aug 2026) | **[METRICS_V2.md](METRICS_V2.md)** |
 | the automations themselves, before and after | **[automations/README.md](automations/README.md)** |
 | the raw evidence each locator came from | **[run_logs/README.md](run_logs/README.md)** |
 | the one-off scripts used to diagnose failures | **[run_logs/diagnostics/README.md](run_logs/diagnostics/README.md)** |

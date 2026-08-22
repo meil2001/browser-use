@@ -1,5 +1,9 @@
 # Run 1 vs Run 2 — measured
 
+> **Version 2:** Phases 1–4 revision and a full four-site retest are documented in
+> [VERSION2.md](VERSION2.md) and [METRICS_V2.md](METRICS_V2.md). This file remains the **V1**
+> submission baseline.
+
 Every number here comes from a log line or a timed run, and each row says where.
 Nothing is estimated. Where something is not measured, it says so rather than guessing.
 

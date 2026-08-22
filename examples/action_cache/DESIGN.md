@@ -199,11 +199,10 @@ fired immediately after login do nothing, later ones land.
 
 ## Known limitations, in severity order
 
-1. **Position-dependent xpath.** Site 4 cached `.../div[1]/a[5]` and `ul/li[5]/a`. They work
-   today, but if catalog order or relevance ranking changes, `a[5]` silently clicks a *different
-   product* and replay still reports success. Flagged `weak` in coverage, not hardened. This is
-   the only limitation that can produce a **wrong result** rather than a visible failure, which
-   makes it the most serious.
+1. **Position-dependent xpath (reduced).** The ladder now prefers `data-test` hooks and
+   `get_by_role` before xpath when recompiling from existing logs. Site 4's product click
+   became `locator("[data-test=product-…]")` instead of `…/a[5]`. Residual xpath on sites
+   without test hooks or clean link labels is still flagged `weak` in coverage.
 2. **Two silent field-mismatch bugs, one root cause.** `roles` is a flat `value → role` dict, so
    one value can only ever carry one role. Consequences: (a) a right value typed into the wrong
    field with no competing correct write still reports `missing: []`; (b) a value legitimately
@@ -222,7 +221,13 @@ fired immediately after login do nothing, later ones land.
    `input_text`. The hook audit reports this rather than hiding it.
 6. **iframe / shadow DOM elements** — fails loudly (the locator doesn't resolve). Named scope.
 7. **Auto-generated ids that change per reload** — undetectable at compile time by any design.
-8. **Passwords** — logged as `text: None` and dropped as off-task; routed around, not solved.
+8. **Passwords and credentials** — typed values are never written to the action cache for
+   password fields (`text` is null, `after.target.value` is null). The locator and label are
+   kept so replay still targets the right box; the literal comes from `input_parameters`, not
+   from the log. Two places still show saucedemo's public login, and both are outside this
+   redaction: task strings and `run_review.json`, which quote it because the assignment task
+   does, and `loop*.log`, which is browser-use's own agent transcript rather than the cache.
+   The guarantee is scoped to what this pipeline writes.
 
 ---
 

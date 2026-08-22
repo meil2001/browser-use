@@ -90,7 +90,7 @@
       "i": 1,
       "action": "input",
       "label": "Password",
-      "text": "secret_sauce",
+      "text": null,
       "url": "https://www.saucedemo.com/"
     },
     {

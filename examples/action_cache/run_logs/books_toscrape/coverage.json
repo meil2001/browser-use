@@ -3,18 +3,8 @@
   "cached": [],
   "missing": [],
   "extra": [],
-  "weak": [
-    {
-      "text": null,
-      "by": "xpath",
-      "value": "html/body/div/div/div/aside/div[2]/ul/li/ul/li[1]/a"
-    },
-    {
-      "text": null,
-      "by": "xpath",
-      "value": "html/body/div/div/div/div/section/div[2]/ol/li[1]/article/h3/a"
-    }
-  ],
+  "weak": [],
+  "ineffective": [],
   "steps": [
     {
       "description": "Go to the \"Travel\" category",

@@ -7,18 +7,7 @@
   ],
   "missing": [],
   "extra": [],
-  "weak": [
-    {
-      "text": null,
-      "by": "xpath",
-      "value": "html/body/app-root/div[2]/app-overview/div[3]/div[2]/div[1]/a[5]"
-    },
-    {
-      "text": null,
-      "by": "xpath",
-      "value": "html/body/app-root/app-header/nav/div/div/ul/li[5]/a"
-    }
-  ],
+  "weak": [],
   "ineffective": [
     {
       "action": "click",

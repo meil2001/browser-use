@@ -309,7 +309,7 @@ async def main() -> None:
 	parser = argparse.ArgumentParser(description=__doc__)
 	parser.add_argument("--automation", default="test_automation.json")
 	parser.add_argument("--run-dir", default="run_logs")
-	parser.add_argument("--max-iterations", type=int, default=3)
+	parser.add_argument("--max-iterations", type=int, default=5)
 	parser.add_argument("--first-run-max-steps", type=int, default=15)
 	parser.add_argument("--repair-max-steps", type=int, default=6)
 	args = parser.parse_args()
