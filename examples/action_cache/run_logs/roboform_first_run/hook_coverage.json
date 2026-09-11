@@ -1,0 +1,6 @@
+{
+  "audit_available": false,
+  "used_by_workflow": [],
+  "blind_spots": [],
+  "next": "Blind spot = the agent used this action but nothing was recorded. Hook it at execute-time; do not reconstruct a locator afterwards."
+}

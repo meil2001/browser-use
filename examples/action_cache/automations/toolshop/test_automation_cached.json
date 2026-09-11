@@ -1,0 +1,54 @@
+{
+  "url": "https://practicesoftwaretesting.com/",
+  "parameters": {
+    "input_parameters": {
+      "search_box": [
+        "Pliers"
+      ]
+    },
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "input_text": {
+          "command": "locator(\"#search-query\").first",
+          "prompt_instructions": "Fill the field Search (id=search-query)",
+          "input_text": "{search_box[0]}",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"[data-test=\\\"product-01M0JM8ANV543S4695PP78M3CK\\\"]\").first",
+          "prompt_instructions": "Click the element Slip Joint Pliers Compare Slip Joint Pliers CO₂: A B C D E $ (data-test=product-01M0JM8ANV543S4695PP78M3CK)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"#btn-add-to-cart\").first",
+          "prompt_instructions": "Click the element Add to cart (id=btn-add-to-cart)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "locator(\"[data-test=\\\"nav-cart\\\"]\").first",
+          "prompt_instructions": "Click the element cart (data-test=nav-cart)",
+          "skip_prompt": true
+        }
+      }
+    }
+  ]
+}

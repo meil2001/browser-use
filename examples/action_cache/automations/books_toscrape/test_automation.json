@@ -1,0 +1,19 @@
+{
+  "url": "https://books.toscrape.com/",
+  "parameters": {
+    "input_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "agentic_task": {
+          "task": "Go to the \"Travel\" category. On the Travel category page, click on the book titled \"It's Only the Himalayas\" to open its detail page. On the book detail page, click the \"Add to basket\" button. Then stop — do not add any other book.",
+          "max_steps": 15,
+          "backend": "browser_use"
+        }
+      }
+    }
+  ]
+}

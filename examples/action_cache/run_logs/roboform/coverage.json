@@ -1,0 +1,74 @@
+{
+  "required": [
+    "myname",
+    "xyz",
+    "abc",
+    "SF"
+  ],
+  "cached": [
+    "myname",
+    "xyz",
+    "abc",
+    "SF"
+  ],
+  "missing": [],
+  "extra": [],
+  "weak": [],
+  "ineffective": [],
+  "steps": [
+    {
+      "description": "Fill full name as myname",
+      "kind": "input",
+      "expected_target": "Full Name",
+      "verdict": "covered",
+      "evidence": 0,
+      "evidence_label": "Full Name",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Fill address line one as xyz",
+      "kind": "input",
+      "expected_target": "Address Line 1",
+      "verdict": "covered",
+      "evidence": 1,
+      "evidence_label": "Address Line 1",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Fill address line 2 as abc",
+      "kind": "input",
+      "expected_target": "Address Line 2",
+      "verdict": "covered",
+      "evidence": 2,
+      "evidence_label": "Address Line 2",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Fill city as SF",
+      "kind": "input",
+      "expected_target": "City",
+      "verdict": "covered",
+      "evidence": 3,
+      "evidence_label": "City",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    }
+  ],
+  "step_summary": {
+    "available": true,
+    "steps_total": 4,
+    "covered": 4,
+    "missing": 0,
+    "unverifiable": 0,
+    "actions_recorded": 4,
+    "conflicts": []
+  },
+  "next": "If a gap node types via input(), re-run python -m browser_use.action_cache. Do not invent locators from evaluate() or axtree."
+}

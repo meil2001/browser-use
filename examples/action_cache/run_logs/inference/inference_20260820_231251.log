@@ -1,0 +1,382 @@
+2026-08-20 23:12:51,430 [WARNING] optexity.cli.<module>: ENV_PATH is not set, using default values
+2026-08-20 23:12:51,970 [WARNING] optexity.utils.llm_settings.<module>: ENV_PATH is not set, using default values
+INFO:     Started server process [50375]
+INFO:     Waiting for application startup.
+2026-08-20 23:12:54,299 [INFO] optexity.inference.child_process.lifespan: Not running on AWS, skipping master registration
+2026-08-20 23:12:54,300 [INFO] optexity.inference.child_process.lifespan: Task processor background task started
+2026-08-20 23:12:54,300 [INFO] optexity.inference.child_process.task_processor: Task processor started
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:9000 (Press CTRL+C to quit)
+2026-08-20 23:12:58,399 [INFO] optexity.inference.child_process.inference: Using local test_automation_cached.json override
+INFO:     127.0.0.1:52864 - "POST /inference HTTP/1.1" 202 Accepted
+2026-08-20 23:12:59,405 [INFO] optexity.inference.child_process.task_processor: Fetched fresh automation for task 56b7af81-6729-4d6b-969c-585486d4e132 (recording b17ad1f1-51f9-4514-b9e1-e41e6a38e52a)
+2026-08-20 23:12:59,406 [INFO] optexity.inference.child_process.run_automation_in_process: ---------- Starting to run automation for task 56b7af81-6729-4d6b-969c-585486d4e132 ----------
+
+2026-08-20 23:12:59,406 [INFO] optexity.inference.child_process.run_automation_in_process: Using local test_automation_cached.json override for run
+2026-08-20 23:12:59,406 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:12:59,406 [INFO] optexity.inference.child_process.log_system_info: Memory info before starting browser
+2026-08-20 23:12:59,406 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 10431.56, "percent_container_memory_used": 0.32}
+2026-08-20 23:12:59,406 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 10431.56, "percent_host_memory_used": 0.32}
+2026-08-20 23:12:59,406 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:12:59,406 [INFO] optexity.inference.child_process.setup_browser: Starting new actual browser
+2026-08-20 23:12:59,407 [DEBUG] optexity.inference.infra.actual_browser.start_playwright_browser: Starting actual browser
+2026-08-20 23:12:59,844 [INFO] optexity.inference.infra.actual_browser._seed_print_preferences: Seeded print prefs at /tmp/userdata_04be8d00-c5ba-407e-834a-c5bb2e08db6a/Default/Preferences -> save PDFs to /tmp/temp_downloads
+2026-08-20 23:12:59,844 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: ✅ Using cached I still don't care about cookies extension from /tmp/extensions/edibdbjcniadpccecjdfdjjppcpchdlm
+2026-08-20 23:12:59,844 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: ✅ Using cached ublock origin extension from /tmp/extensions/ddkjiahejlhfcafbddmgiahcphecmpfh
+2026-08-20 23:12:59,844 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: Loaded extensions: I still don't care about cookies, ublock origin
+2026-08-20 23:12:59,844 [INFO] optexity.inference.infra.actual_browser.get_args: Extension args: --load-extension=/tmp/extensions/edibdbjcniadpccecjdfdjjppcpchdlm,/tmp/extensions/ddkjiahejlhfcafbddmgiahcphecmpfh
+2026-08-20 23:13:01,917 [DEBUG] optexity.inference.infra.actual_browser._wait_for_cdp: Waiting for CDP
+2026-08-20 23:13:01,927 [DEBUG] optexity.inference.infra.actual_browser.start_playwright_browser: CDP ready
+2026-08-20 23:13:01,933 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:13:01,933 [INFO] optexity.inference.child_process.log_system_info: Memory info after starting browser
+2026-08-20 23:13:01,934 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 10141.36, "percent_container_memory_used": 0.31}
+2026-08-20 23:13:01,936 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 10134.69, "percent_host_memory_used": 0.31}
+2026-08-20 23:13:01,936 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:13:01,936 [INFO] optexity.inference.child_process._run_attempt: Starting worker attempt 1/1 (attempts_left=1)
+2026-08-20 23:13:01,950 [DEBUG] optexity.inference.child_process._run_attempt: Waiting for automation to finish
+2026-08-20 23:13:03,139 [WARNING] optexity.utils.llm_settings.<module>: ENV_PATH is not set, using default values
+2026-08-20 23:13:04,910 [INFO] optexity.private_nodes.load_plugins: Loaded private node handlers: none
+2026-08-20 23:13:04,910 [INFO] optexity.inference.core.run_automation.run_automation: Task 56b7af81-6729-4d6b-969c-585486d4e132 started running
+2026-08-20 23:13:05,897 [DEBUG] optexity.inference.infra.browser.start: Starting browser
+2026-08-20 23:13:05,899 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:13:06,586 [INFO] browser_use.telemetry.service.__init__: Using anonymized telemetry, see https://docs.browser-use.com/development/telemetry.
+2026-08-20 23:13:07,257 [INFO] optexity.inference.infra.browser.start: CDP download behavior set to: /tmp/temp_downloads
+2026-08-20 23:13:07,258 [DEBUG] optexity.inference.infra.browser.start: Browser started successfully
+2026-08-20 23:13:11,733 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 0-----
+2026-08-20 23:13:11,735 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"04fullname\\\"]\").first","prompt_instructions":"Fill the field name=04fullname","skip_prompt":true,"input_text":"myname"}}---------
+2026-08-20 23:13:11,735 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:13:11,839 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 463.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:13:11,960 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:13:11,962 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:13:12,060 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 98ms (5815 chars)
+2026-08-20 23:13:12,068 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[5]/div[2]/input").fill(\'myname\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:13:12,087 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:13:12,109 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 tar built in 0.02s, size=183041 bytes
+2026-08-20 23:13:14,411 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 upload succeeded in 2.30s, status=200
+2026-08-20 23:13:14,515 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 0-----
+2026-08-20 23:13:14,655 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 1-----
+2026-08-20 23:13:14,656 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"10address1\\\"]\").first","prompt_instructions":"Fill the field name=10address1","skip_prompt":true,"input_text":"xyz"}}---------
+2026-08-20 23:13:14,656 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:13:14,739 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 574.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:13:14,862 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:13:14,863 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:13:14,946 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 83ms (5815 chars)
+2026-08-20 23:13:14,952 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[8]/div[2]/input").fill(\'xyz\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:13:14,959 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:13:15,064 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 1-----
+2026-08-20 23:13:15,190 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 2-----
+2026-08-20 23:13:15,191 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"11address2\\\"]\").first","prompt_instructions":"Fill the field name=11address2","skip_prompt":true,"input_text":"abc"}}---------
+2026-08-20 23:13:15,191 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:13:15,264 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 611.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:13:15,385 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:13:15,386 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:13:15,469 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 83ms (5815 chars)
+2026-08-20 23:13:15,476 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[9]/div[2]/input").fill(\'abc\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:13:15,482 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:13:15,588 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 2-----
+2026-08-20 23:13:15,712 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 3-----
+2026-08-20 23:13:15,712 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"prompt_instructions":"Only fill the remaining empty field that should contain 'SF'. Do not change fields already filled with: myname, xyz, abc. Type exactly 'SF'.","skip_command":true,"input_text":"SF"}}---------
+2026-08-20 23:13:15,712 [DEBUG] optexity.inference.core.interaction.handle_input.handle_input_text: Executing prompt-based action: InputTextAction
+2026-08-20 23:13:15,870 [INFO] optexity.inference.models.get_llm_model: Created model anthropic/claude-sonnet-4-6 (structured=True)
+2026-08-20 23:13:17,909 [INFO] optexity.inference.core.interaction.utils.update_screenshot_with_highlight: Updating screenshot with highlight for element index: 24
+2026-08-20 23:13:17,909 [DEBUG] optexity.inference.core.interaction.utils.get_element_viewport_bbox_by_index: Getting viewport bbox for element index: 24
+2026-08-20 23:13:17,913 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 685.3984375, 'width': 171.0, 'height': 32.0}
+2026-08-20 23:13:18,050 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:13:18,052 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:13:18,052 [INFO] optexity.inference.core.interaction.utils.update_screenshot_with_highlight: Successfully updated screenshot with highlight for element index 24
+2026-08-20 23:13:18,052 [INFO] browser_use.Agent🅰 546e ⇢ 🅑 4223 🅣 24._log_action:   ▶️   [34minput[0m: [35mindex[0m: 24, [35mtext[0m: SF, [35mclear[0m: True
+2026-08-20 23:13:18,094 [INFO] browser_use.BrowserSession🅑 4223 🅣 24.on_TypeTextEvent: ⌨️ Typed "SF" into element with index 24
+2026-08-20 23:13:18,095 [INFO] browser_use.action_cache.append_executed_action: action_cache wrote input index=24 identity={'by': 'name', 'value': '14adrstate'} -> run_logs/action_cache.jsonl
+2026-08-20 23:13:18,095 [INFO] optexity.inference.core.interaction.utils.log_interacted_locator: LLM fallback locator [index 24]: page.locator("xpath=html/body/div[2]/form/div/div[1]/div[11]/div[2]/input").fill('SF') (+0 more candidate(s))
+2026-08-20 23:13:18,202 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 3-----
+2026-08-20 23:13:18,202 [DEBUG] optexity.inference.core.run_automation.run_final_downloads_check: Running final downloads check
+2026-08-20 23:13:18,203 [WARNING] optexity.inference.core.run_automation.run_final_downloads_check: Found 0 downloads, expected 0
+2026-08-20 23:13:23,735 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 found 0 download file(s): []
+2026-08-20 23:13:24,647 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 starting direct-to-S3 upload of 1 file(s): [('final_screenshot.png', 'image/png', 535775)]
+2026-08-20 23:13:27,535 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 uploaded 'final_screenshot.png' (535775 bytes) in 2.88s
+2026-08-20 23:13:27,536 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 uploaded 1/1 file(s) to S3 in 2.89s
+2026-08-20 23:13:28,611 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 upload succeeded in 3.96s, status=200, response={'success': True, 'downloads': ['s3://optexity-task-downloads/56b7af81-6729-4d6b-969c-585486d4e132/final_screenshot.png']}
+2026-08-20 23:13:28,711 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 tar built in 0.09s, size=927779 bytes
+2026-08-20 23:13:31,707 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 upload succeeded in 3.00s, status=200
+2026-08-20 23:13:32,846 [INFO] optexity.inference.core.logging.initiate_callback: initiating callback
+2026-08-20 23:13:32,852 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:13:32,853 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:13:32,853 [INFO] browser_use.Agent🅰 546e ⇢ 🅑 4223 🅣 24.stop: ⏹️ Agent stopping
+2026-08-20 23:13:32,853 [DEBUG] optexity.inference.infra.browser.stop: Resetting browser session
+2026-08-20 23:13:32,859 [INFO] browser_use.BrowserSession🅑 4223 🅣 [91m--[0m.clear: [SessionManager] Cleared all owned data (targets, sessions, mappings)
+2026-08-20 23:13:32,860 [INFO] browser_use.BrowserSession🅑 4223 🅣 [91m--[0m.reset: ✅ Browser session reset complete
+2026-08-20 23:13:33,007 [DEBUG] optexity.inference.infra.browser.stop: Browser session reset
+2026-08-20 23:13:33,007 [DEBUG] optexity.inference.infra.browser.stop: Stopping browser
+2026-08-20 23:13:33,012 [DEBUG] optexity.inference.infra.browser.stop: Stopping playwright
+2026-08-20 23:13:33,030 [INFO] optexity.inference.core.run_automation.run_automation: Task 56b7af81-6729-4d6b-969c-585486d4e132 completed with status success
+2026-08-20 23:13:33,041 [INFO] optexity.inference.child_process._run_attempt: Worker finished with return code 0
+2026-08-20 23:13:33,042 [INFO] optexity.inference.child_process.run_automation_in_process: ---------- Automation for task 56b7af81-6729-4d6b-969c-585486d4e132 finished ----------
+
+2026-08-20 23:13:33,042 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:13:33,042 [INFO] optexity.inference.child_process.log_system_info: Memory info after automation finished in process
+2026-08-20 23:13:33,042 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 9465.44, "percent_container_memory_used": 0.29}
+2026-08-20 23:13:33,042 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 9465.83, "percent_host_memory_used": 0.29}
+2026-08-20 23:13:33,043 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:13:33,043 [DEBUG] optexity.inference.child_process.run_automation_in_process: Stopping actual browser as not dedicated
+2026-08-20 23:13:33,205 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:13:33,205 [INFO] optexity.inference.child_process.log_system_info: Memory info after stopping actual browser
+2026-08-20 23:13:33,205 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 9793.36, "percent_container_memory_used": 0.3}
+2026-08-20 23:13:33,205 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 9793.44, "percent_host_memory_used": 0.3}
+2026-08-20 23:13:33,205 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:13:33,293 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 tar built in 0.09s, size=928111 bytes
+2026-08-20 23:13:36,286 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=56b7af81-6729-4d6b-969c-585486d4e132 upload succeeded in 2.99s, status=200
+2026-08-20 23:14:45,609 [INFO] optexity.inference.child_process.inference: Using local test_automation_cached.json override
+INFO:     127.0.0.1:53229 - "POST /inference HTTP/1.1" 202 Accepted
+2026-08-20 23:14:46,636 [INFO] optexity.inference.child_process.task_processor: Fetched fresh automation for task 9011efee-05d9-471c-85cf-d538040cc634 (recording b17ad1f1-51f9-4514-b9e1-e41e6a38e52a)
+2026-08-20 23:14:46,637 [INFO] optexity.inference.child_process.run_automation_in_process: ---------- Starting to run automation for task 9011efee-05d9-471c-85cf-d538040cc634 ----------
+
+2026-08-20 23:14:46,637 [INFO] optexity.inference.child_process.run_automation_in_process: Using local test_automation_cached.json override for run
+2026-08-20 23:14:46,637 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:14:46,637 [INFO] optexity.inference.child_process.log_system_info: Memory info before starting browser
+2026-08-20 23:14:46,638 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 10380.86, "percent_container_memory_used": 0.32}
+2026-08-20 23:14:46,638 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 10380.88, "percent_host_memory_used": 0.32}
+2026-08-20 23:14:46,638 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:14:46,638 [INFO] optexity.inference.child_process.setup_browser: Starting new actual browser
+2026-08-20 23:14:46,638 [DEBUG] optexity.inference.infra.actual_browser.start_playwright_browser: Starting actual browser
+2026-08-20 23:14:47,073 [INFO] optexity.inference.infra.actual_browser._seed_print_preferences: Seeded print prefs at /tmp/userdata_04be8d00-c5ba-407e-834a-c5bb2e08db6a/Default/Preferences -> save PDFs to /tmp/temp_downloads
+2026-08-20 23:14:47,073 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: ✅ Using cached I still don't care about cookies extension from /tmp/extensions/edibdbjcniadpccecjdfdjjppcpchdlm
+2026-08-20 23:14:47,073 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: ✅ Using cached ublock origin extension from /tmp/extensions/ddkjiahejlhfcafbddmgiahcphecmpfh
+2026-08-20 23:14:47,073 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: Loaded extensions: I still don't care about cookies, ublock origin
+2026-08-20 23:14:47,073 [INFO] optexity.inference.infra.actual_browser.get_args: Extension args: --load-extension=/tmp/extensions/edibdbjcniadpccecjdfdjjppcpchdlm,/tmp/extensions/ddkjiahejlhfcafbddmgiahcphecmpfh
+2026-08-20 23:14:48,935 [DEBUG] optexity.inference.infra.actual_browser._wait_for_cdp: Waiting for CDP
+2026-08-20 23:14:48,947 [DEBUG] optexity.inference.infra.actual_browser.start_playwright_browser: CDP ready
+2026-08-20 23:14:48,951 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:14:48,951 [INFO] optexity.inference.child_process.log_system_info: Memory info after starting browser
+2026-08-20 23:14:48,951 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 10152.0, "percent_container_memory_used": 0.31}
+2026-08-20 23:14:48,956 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 10154.56, "percent_host_memory_used": 0.31}
+2026-08-20 23:14:48,956 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:14:48,956 [INFO] optexity.inference.child_process._run_attempt: Starting worker attempt 1/1 (attempts_left=1)
+2026-08-20 23:14:48,969 [DEBUG] optexity.inference.child_process._run_attempt: Waiting for automation to finish
+2026-08-20 23:14:50,003 [WARNING] optexity.utils.llm_settings.<module>: ENV_PATH is not set, using default values
+2026-08-20 23:14:51,798 [INFO] optexity.private_nodes.load_plugins: Loaded private node handlers: none
+2026-08-20 23:14:51,799 [INFO] optexity.inference.core.run_automation.run_automation: Task 9011efee-05d9-471c-85cf-d538040cc634 started running
+2026-08-20 23:14:52,748 [DEBUG] optexity.inference.infra.browser.start: Starting browser
+2026-08-20 23:14:52,748 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:14:53,422 [INFO] browser_use.telemetry.service.__init__: Using anonymized telemetry, see https://docs.browser-use.com/development/telemetry.
+2026-08-20 23:14:54,099 [INFO] optexity.inference.infra.browser.start: CDP download behavior set to: /tmp/temp_downloads
+2026-08-20 23:14:54,099 [DEBUG] optexity.inference.infra.browser.start: Browser started successfully
+2026-08-20 23:14:57,535 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 0-----
+2026-08-20 23:14:57,535 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"04fullname\\\"]\").first","prompt_instructions":"Fill the field name=04fullname","skip_prompt":true,"input_text":"myname"}}---------
+2026-08-20 23:14:57,535 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:14:57,628 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 463.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:14:57,762 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:14:57,764 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:14:57,863 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 99ms (5817 chars)
+2026-08-20 23:14:57,870 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[5]/div[2]/input").fill(\'myname\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:14:57,891 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:14:57,913 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 tar built in 0.02s, size=183068 bytes
+2026-08-20 23:14:59,942 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 upload succeeded in 2.03s, status=200
+2026-08-20 23:15:00,046 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 0-----
+2026-08-20 23:15:00,206 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 1-----
+2026-08-20 23:15:00,207 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"10address1\\\"]\").first","prompt_instructions":"Fill the field name=10address1","skip_prompt":true,"input_text":"xyz"}}---------
+2026-08-20 23:15:00,207 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:15:00,277 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 574.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:15:00,396 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:15:00,398 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:15:00,482 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 84ms (5817 chars)
+2026-08-20 23:15:00,488 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[8]/div[2]/input").fill(\'xyz\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:15:00,494 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:15:00,601 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 1-----
+2026-08-20 23:15:00,723 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 2-----
+2026-08-20 23:15:00,723 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"11address2\\\"]\").first","prompt_instructions":"Fill the field name=11address2","skip_prompt":true,"input_text":"abc"}}---------
+2026-08-20 23:15:00,723 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:15:00,811 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 611.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:15:00,934 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:15:00,936 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:15:01,018 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 82ms (5817 chars)
+2026-08-20 23:15:01,023 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[9]/div[2]/input").fill(\'abc\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:15:01,031 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:15:01,138 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 2-----
+2026-08-20 23:15:01,272 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 3-----
+2026-08-20 23:15:01,272 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"prompt_instructions":"Fill the city field with exactly 'SF'. Do not fill State, ZIP, country, search, or any other empty field. Do not change fields already filled with: myname, xyz, abc.","skip_command":true,"input_text":"SF"}}---------
+2026-08-20 23:15:01,272 [DEBUG] optexity.inference.core.interaction.handle_input.handle_input_text: Executing prompt-based action: InputTextAction
+2026-08-20 23:15:01,424 [INFO] optexity.inference.models.get_llm_model: Created model anthropic/claude-sonnet-4-6 (structured=True)
+2026-08-20 23:15:03,256 [INFO] optexity.inference.core.interaction.utils.update_screenshot_with_highlight: Updating screenshot with highlight for element index: 22
+2026-08-20 23:15:03,256 [DEBUG] optexity.inference.core.interaction.utils.get_element_viewport_bbox_by_index: Getting viewport bbox for element index: 22
+2026-08-20 23:15:03,261 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 648.3984375, 'width': 171.0, 'height': 32.0}
+2026-08-20 23:15:03,394 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:15:03,397 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:15:03,397 [INFO] optexity.inference.core.interaction.utils.update_screenshot_with_highlight: Successfully updated screenshot with highlight for element index 22
+2026-08-20 23:15:03,397 [INFO] browser_use.Agent🅰 9f1a ⇢ 🅑 5f66 🅣 01._log_action:   ▶️   [34minput[0m: [35mindex[0m: 22, [35mtext[0m: SF, [35mclear[0m: True
+2026-08-20 23:15:03,439 [INFO] browser_use.BrowserSession🅑 5f66 🅣 01.on_TypeTextEvent: ⌨️ Typed "SF" into element with index 22
+2026-08-20 23:15:03,440 [INFO] browser_use.action_cache.append_executed_action: action_cache wrote input index=22 identity={'by': 'name', 'value': '13adr_city'} -> run_logs/action_cache.jsonl
+2026-08-20 23:15:03,440 [INFO] optexity.inference.core.interaction.utils.log_interacted_locator: LLM fallback locator [index 22]: page.locator("xpath=html/body/div[2]/form/div/div[1]/div[10]/div[2]/input").fill('SF') (+0 more candidate(s))
+2026-08-20 23:15:03,546 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 3-----
+2026-08-20 23:15:03,546 [DEBUG] optexity.inference.core.run_automation.run_final_downloads_check: Running final downloads check
+2026-08-20 23:15:03,547 [WARNING] optexity.inference.core.run_automation.run_final_downloads_check: Found 0 downloads, expected 0
+2026-08-20 23:15:06,840 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 found 0 download file(s): []
+2026-08-20 23:15:07,686 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 starting direct-to-S3 upload of 1 file(s): [('final_screenshot.png', 'image/png', 535792)]
+2026-08-20 23:15:10,686 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 uploaded 'final_screenshot.png' (535792 bytes) in 2.99s
+2026-08-20 23:15:10,687 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 uploaded 1/1 file(s) to S3 in 3.00s
+2026-08-20 23:15:11,728 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 upload succeeded in 4.04s, status=200, response={'success': True, 'downloads': ['s3://optexity-task-downloads/9011efee-05d9-471c-85cf-d538040cc634/final_screenshot.png']}
+2026-08-20 23:15:11,836 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 tar built in 0.10s, size=927834 bytes
+2026-08-20 23:15:14,595 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 upload succeeded in 2.76s, status=200
+2026-08-20 23:15:15,764 [INFO] optexity.inference.core.logging.initiate_callback: initiating callback
+2026-08-20 23:15:15,770 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:15:15,770 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:15:15,770 [INFO] browser_use.Agent🅰 9f1a ⇢ 🅑 5f66 🅣 01.stop: ⏹️ Agent stopping
+2026-08-20 23:15:15,770 [DEBUG] optexity.inference.infra.browser.stop: Resetting browser session
+2026-08-20 23:15:15,776 [INFO] browser_use.BrowserSession🅑 5f66 🅣 [91m--[0m.clear: [SessionManager] Cleared all owned data (targets, sessions, mappings)
+2026-08-20 23:15:15,778 [INFO] browser_use.BrowserSession🅑 5f66 🅣 [91m--[0m.reset: ✅ Browser session reset complete
+2026-08-20 23:15:15,912 [DEBUG] optexity.inference.infra.browser.stop: Browser session reset
+2026-08-20 23:15:15,912 [DEBUG] optexity.inference.infra.browser.stop: Stopping browser
+2026-08-20 23:15:15,916 [DEBUG] optexity.inference.infra.browser.stop: Stopping playwright
+2026-08-20 23:15:15,930 [INFO] optexity.inference.core.run_automation.run_automation: Task 9011efee-05d9-471c-85cf-d538040cc634 completed with status success
+2026-08-20 23:15:15,940 [INFO] optexity.inference.child_process._run_attempt: Worker finished with return code 0
+2026-08-20 23:15:15,940 [INFO] optexity.inference.child_process.run_automation_in_process: ---------- Automation for task 9011efee-05d9-471c-85cf-d538040cc634 finished ----------
+
+2026-08-20 23:15:15,940 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:15:15,941 [INFO] optexity.inference.child_process.log_system_info: Memory info after automation finished in process
+2026-08-20 23:15:15,941 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 9490.33, "percent_container_memory_used": 0.29}
+2026-08-20 23:15:15,941 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 9490.33, "percent_host_memory_used": 0.29}
+2026-08-20 23:15:15,941 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:15:15,941 [DEBUG] optexity.inference.child_process.run_automation_in_process: Stopping actual browser as not dedicated
+2026-08-20 23:15:16,089 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:15:16,089 [INFO] optexity.inference.child_process.log_system_info: Memory info after stopping actual browser
+2026-08-20 23:15:16,089 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 9080.88, "percent_container_memory_used": 0.28}
+2026-08-20 23:15:16,089 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 9080.89, "percent_host_memory_used": 0.28}
+2026-08-20 23:15:16,089 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:15:16,174 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 tar built in 0.08s, size=928158 bytes
+2026-08-20 23:15:18,751 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=9011efee-05d9-471c-85cf-d538040cc634 upload succeeded in 2.58s, status=200
+2026-08-20 23:16:05,712 [INFO] optexity.inference.child_process.inference: Using local test_automation_cached.json override
+INFO:     127.0.0.1:53595 - "POST /inference HTTP/1.1" 202 Accepted
+2026-08-20 23:16:06,678 [INFO] optexity.inference.child_process.task_processor: Fetched fresh automation for task c95f5397-c269-41a1-8e9f-3cef0a976917 (recording b17ad1f1-51f9-4514-b9e1-e41e6a38e52a)
+2026-08-20 23:16:06,679 [INFO] optexity.inference.child_process.run_automation_in_process: ---------- Starting to run automation for task c95f5397-c269-41a1-8e9f-3cef0a976917 ----------
+
+2026-08-20 23:16:06,679 [INFO] optexity.inference.child_process.run_automation_in_process: Using local test_automation_cached.json override for run
+2026-08-20 23:16:06,679 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:16:06,679 [INFO] optexity.inference.child_process.log_system_info: Memory info before starting browser
+2026-08-20 23:16:06,680 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 10361.5, "percent_container_memory_used": 0.32}
+2026-08-20 23:16:06,680 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 10361.53, "percent_host_memory_used": 0.32}
+2026-08-20 23:16:06,680 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:16:06,680 [INFO] optexity.inference.child_process.setup_browser: Starting new actual browser
+2026-08-20 23:16:06,680 [DEBUG] optexity.inference.infra.actual_browser.start_playwright_browser: Starting actual browser
+2026-08-20 23:16:07,138 [INFO] optexity.inference.infra.actual_browser._seed_print_preferences: Seeded print prefs at /tmp/userdata_04be8d00-c5ba-407e-834a-c5bb2e08db6a/Default/Preferences -> save PDFs to /tmp/temp_downloads
+2026-08-20 23:16:07,138 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: ✅ Using cached I still don't care about cookies extension from /tmp/extensions/edibdbjcniadpccecjdfdjjppcpchdlm
+2026-08-20 23:16:07,138 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: ✅ Using cached ublock origin extension from /tmp/extensions/ddkjiahejlhfcafbddmgiahcphecmpfh
+2026-08-20 23:16:07,138 [INFO] optexity.inference.infra.actual_browser.get_extension_paths: Loaded extensions: I still don't care about cookies, ublock origin
+2026-08-20 23:16:07,138 [INFO] optexity.inference.infra.actual_browser.get_args: Extension args: --load-extension=/tmp/extensions/edibdbjcniadpccecjdfdjjppcpchdlm,/tmp/extensions/ddkjiahejlhfcafbddmgiahcphecmpfh
+2026-08-20 23:16:08,977 [DEBUG] optexity.inference.infra.actual_browser._wait_for_cdp: Waiting for CDP
+2026-08-20 23:16:08,989 [DEBUG] optexity.inference.infra.actual_browser.start_playwright_browser: CDP ready
+2026-08-20 23:16:08,989 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:16:08,989 [INFO] optexity.inference.child_process.log_system_info: Memory info after starting browser
+2026-08-20 23:16:08,990 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 9983.98, "percent_container_memory_used": 0.3}
+2026-08-20 23:16:08,996 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 9983.98, "percent_host_memory_used": 0.3}
+2026-08-20 23:16:08,996 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:16:08,996 [INFO] optexity.inference.child_process._run_attempt: Starting worker attempt 1/1 (attempts_left=1)
+2026-08-20 23:16:09,012 [DEBUG] optexity.inference.child_process._run_attempt: Waiting for automation to finish
+2026-08-20 23:16:10,093 [WARNING] optexity.utils.llm_settings.<module>: ENV_PATH is not set, using default values
+2026-08-20 23:16:11,916 [INFO] optexity.private_nodes.load_plugins: Loaded private node handlers: none
+2026-08-20 23:16:11,916 [INFO] optexity.inference.core.run_automation.run_automation: Task c95f5397-c269-41a1-8e9f-3cef0a976917 started running
+2026-08-20 23:16:12,881 [DEBUG] optexity.inference.infra.browser.start: Starting browser
+2026-08-20 23:16:12,881 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:16:13,525 [INFO] browser_use.telemetry.service.__init__: Using anonymized telemetry, see https://docs.browser-use.com/development/telemetry.
+2026-08-20 23:16:14,215 [INFO] optexity.inference.infra.browser.start: CDP download behavior set to: /tmp/temp_downloads
+2026-08-20 23:16:14,215 [DEBUG] optexity.inference.infra.browser.start: Browser started successfully
+2026-08-20 23:16:18,274 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 0-----
+2026-08-20 23:16:18,274 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"04fullname\\\"]\").first","prompt_instructions":"Fill the field name=04fullname","skip_prompt":true,"input_text":"myname"}}---------
+2026-08-20 23:16:18,274 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:16:18,371 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 463.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:16:18,495 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:16:18,496 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:16:18,596 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 99ms (5815 chars)
+2026-08-20 23:16:18,604 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[5]/div[2]/input").fill(\'myname\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:16:18,627 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:16:18,649 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 tar built in 0.02s, size=183071 bytes
+2026-08-20 23:16:20,811 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 upload succeeded in 2.16s, status=200
+2026-08-20 23:16:20,916 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 0-----
+2026-08-20 23:16:21,049 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 1-----
+2026-08-20 23:16:21,049 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"10address1\\\"]\").first","prompt_instructions":"Fill the field name=10address1","skip_prompt":true,"input_text":"xyz"}}---------
+2026-08-20 23:16:21,049 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:16:21,137 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 574.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:16:21,266 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:16:21,268 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:16:21,350 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 82ms (5815 chars)
+2026-08-20 23:16:21,356 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[8]/div[2]/input").fill(\'xyz\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:16:21,362 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:16:21,469 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 1-----
+2026-08-20 23:16:21,609 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 2-----
+2026-08-20 23:16:21,609 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"11address2\\\"]\").first","prompt_instructions":"Fill the field name=11address2","skip_prompt":true,"input_text":"abc"}}---------
+2026-08-20 23:16:21,609 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:16:21,694 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 611.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:16:21,819 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:16:21,821 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:16:21,902 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 81ms (5815 chars)
+2026-08-20 23:16:21,908 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[9]/div[2]/input").fill(\'abc\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:16:21,916 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:16:22,024 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 2-----
+2026-08-20 23:16:22,148 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Running node new 3-----
+2026-08-20 23:16:22,148 [DEBUG] optexity.inference.core.run_interaction.run_interaction_action: ---------Running interaction action {"input_text":{"command":"locator(\"[name=\\\"13adr_city\\\"]\").first","prompt_instructions":"Fill the field name=13adr_city","skip_prompt":true,"input_text":"SF"}}---------
+2026-08-20 23:16:22,148 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Executing command-based action: InputTextAction
+2026-08-20 23:16:22,216 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Injecting highlight overlay for bbox: {'x': 537.75, 'y': 648.3984375, 'width': 171, 'height': 32}
+2026-08-20 23:16:22,339 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Screenshot captured successfully
+2026-08-20 23:16:22,341 [DEBUG] optexity.inference.core.interaction.utils.highlight_element_and_screenshot: Highlight removed successfully
+2026-08-20 23:16:22,424 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step axtree capture took 83ms (5815 chars)
+2026-08-20 23:16:22,430 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: Command-step locator candidates: [{'locator': 'page.locator("xpath=/html/body/div[2]/form/div/div/div[10]/div[2]/input").fill(\'SF\')', 'kind': 'xpath', 'score': 10}]
+2026-08-20 23:16:22,435 [DEBUG] optexity.inference.core.interaction.handle_command.command_based_action_with_retry: InputTextAction successful on try 1
+2026-08-20 23:16:22,541 [DEBUG] optexity.inference.core.run_automation.run_action_node: -----Finished node 3-----
+2026-08-20 23:16:22,542 [DEBUG] optexity.inference.core.run_automation.run_final_downloads_check: Running final downloads check
+2026-08-20 23:16:22,542 [WARNING] optexity.inference.core.run_automation.run_final_downloads_check: Found 0 downloads, expected 0
+2026-08-20 23:16:25,766 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 found 0 download file(s): []
+2026-08-20 23:16:26,648 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 starting direct-to-S3 upload of 1 file(s): [('final_screenshot.png', 'image/png', 535695)]
+2026-08-20 23:16:29,380 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 uploaded 'final_screenshot.png' (535695 bytes) in 2.73s
+2026-08-20 23:16:29,381 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 uploaded 1/1 file(s) to S3 in 2.73s
+2026-08-20 23:16:30,451 [INFO] optexity.inference.core.logging.save_downloads_in_server: [save_downloads_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 upload succeeded in 3.80s, status=200, response={'success': True, 'downloads': ['s3://optexity-task-downloads/c95f5397-c269-41a1-8e9f-3cef0a976917/final_screenshot.png']}
+2026-08-20 23:16:30,545 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 tar built in 0.09s, size=927223 bytes
+2026-08-20 23:16:33,408 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 upload succeeded in 2.86s, status=200
+2026-08-20 23:16:34,492 [INFO] optexity.inference.core.logging.initiate_callback: initiating callback
+2026-08-20 23:16:34,502 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:16:34,503 [DEBUG] optexity.inference.infra.browser.stop: Stopping backend agent
+2026-08-20 23:16:34,503 [INFO] browser_use.Agent🅰 c9d3 ⇢ 🅑 816f 🅣 8F.stop: ⏹️ Agent stopping
+2026-08-20 23:16:34,503 [DEBUG] optexity.inference.infra.browser.stop: Resetting browser session
+2026-08-20 23:16:34,513 [INFO] browser_use.BrowserSession🅑 816f 🅣 [91m--[0m.clear: [SessionManager] Cleared all owned data (targets, sessions, mappings)
+2026-08-20 23:16:34,515 [INFO] browser_use.BrowserSession🅑 816f 🅣 [91m--[0m.reset: ✅ Browser session reset complete
+2026-08-20 23:16:34,680 [DEBUG] optexity.inference.infra.browser.stop: Browser session reset
+2026-08-20 23:16:34,680 [DEBUG] optexity.inference.infra.browser.stop: Stopping browser
+2026-08-20 23:16:34,686 [DEBUG] optexity.inference.infra.browser.stop: Stopping playwright
+2026-08-20 23:16:34,712 [INFO] optexity.inference.core.run_automation.run_automation: Task c95f5397-c269-41a1-8e9f-3cef0a976917 completed with status success
+2026-08-20 23:16:34,730 [INFO] optexity.inference.child_process._run_attempt: Worker finished with return code 0
+2026-08-20 23:16:34,730 [INFO] optexity.inference.child_process.run_automation_in_process: ---------- Automation for task c95f5397-c269-41a1-8e9f-3cef0a976917 finished ----------
+
+2026-08-20 23:16:34,730 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:16:34,731 [INFO] optexity.inference.child_process.log_system_info: Memory info after automation finished in process
+2026-08-20 23:16:34,731 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 9399.73, "percent_container_memory_used": 0.29}
+2026-08-20 23:16:34,731 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 9400.09, "percent_host_memory_used": 0.29}
+2026-08-20 23:16:34,731 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:16:34,731 [DEBUG] optexity.inference.child_process.run_automation_in_process: Stopping actual browser as not dedicated
+2026-08-20 23:16:34,920 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:16:34,920 [INFO] optexity.inference.child_process.log_system_info: Memory info after stopping actual browser
+2026-08-20 23:16:34,920 [INFO] optexity.inference.child_process.log_system_info: {"container_memory_total": 32768.0, "container_memory_used": 9400.09, "percent_container_memory_used": 0.29}
+2026-08-20 23:16:34,920 [INFO] optexity.inference.child_process.log_system_info: {"host_memory_total": 32768.0, "host_memory_used": 9400.09, "percent_host_memory_used": 0.29}
+2026-08-20 23:16:34,920 [INFO] optexity.inference.child_process.log_system_info: ====================================================================================================
+
+2026-08-20 23:16:35,004 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 tar built in 0.08s, size=927540 bytes
+2026-08-20 23:16:37,577 [INFO] optexity.inference.core.logging.save_trajectory_in_server: [save_trajectory_in_server] task=c95f5397-c269-41a1-8e9f-3cef0a976917 upload succeeded in 2.57s, status=200

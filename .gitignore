@@ -30,6 +30,11 @@ dist/
 *.log
 *.bak
 
+# Action cache assignment artifacts. The rules above would drop every cache log and
+# both automation JSONs, which are the evidence that each cached locator came from a
+# recorded action rather than being written by hand.
+!examples/action_cache/**
+
 # Secrets and sensitive files
 secrets.env
 .env

@@ -1306,7 +1306,15 @@ class BrowserSession(BaseModel):
 		include_screenshot: bool = True,
 		cached: bool = False,
 		include_recent_events: bool = False,
+		include_full_page: bool = False,
 	) -> BrowserStateSummary:
+		# include_full_page: accepted for Optexity compatibility (0.11 has no full-page axtree flag).
+		from browser_use.action_cache import install_hook_audit
+
+		# Attach here rather than in __init__: every agent step reads state before
+		# acting, and the bus is replaced on session reset.
+		install_hook_audit(self.event_bus)
+
 		if cached and self._cached_browser_state_summary is not None and self._cached_browser_state_summary.dom_state:
 			# Don't use cached state if it has 0 interactive elements
 			selector_map = self._cached_browser_state_summary.dom_state.selector_map

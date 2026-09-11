@@ -1,0 +1,66 @@
+{
+  "values": [],
+  "steps": [
+    {
+      "description": "Go to the \"Travel\" category",
+      "kind": "click",
+      "expected_target": "Travel",
+      "verdict": "covered",
+      "evidence": 0,
+      "evidence_label": "Travel",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Click on the book titled \"It's Only the Himalayas\" to open its detail page",
+      "kind": "click",
+      "expected_target": "It's Only the Himalayas",
+      "verdict": "covered",
+      "evidence": 1,
+      "evidence_label": "It's Only the Himalayas",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Click the \"Add to basket\" button on the book detail page",
+      "kind": "click",
+      "expected_target": "Add to basket",
+      "verdict": "missing",
+      "evidence": null,
+      "evidence_label": "",
+      "repair_prompt": "On the book detail page for \"It's Only the Himalayas\", find the button labelled \"Add to basket\" and click it.",
+      "repair_prompt_source": "llm",
+      "notes": []
+    }
+  ],
+  "summary": {
+    "available": true,
+    "steps_total": 3,
+    "covered": 2,
+    "missing": 1,
+    "unverifiable": 0,
+    "actions_recorded": 2,
+    "conflicts": []
+  },
+  "source": "llm",
+  "task": "Go to the \"Travel\" category. On the Travel category page, click on the book titled \"It's Only the Himalayas\" to open its detail page. On the book detail page, click the \"Add to basket\" button. Then stop — do not add any other book.",
+  "fingerprint": "813899fa7e70cc287ced8142b529c7d3a4a51ef8163d27309db2cbe7806e7ad2",
+  "trace": [
+    {
+      "i": 0,
+      "action": "click",
+      "label": "Travel",
+      "text": null,
+      "url": "https://books.toscrape.com/catalogue/category/books/travel_2/index.html"
+    },
+    {
+      "i": 1,
+      "action": "click",
+      "label": "It's Only the Himalayas",
+      "text": null,
+      "url": "https://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
+    }
+  ]
+}

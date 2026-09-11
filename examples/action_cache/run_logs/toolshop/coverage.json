@@ -1,0 +1,77 @@
+{
+  "required": [
+    "Pliers"
+  ],
+  "cached": [
+    "Pliers"
+  ],
+  "missing": [],
+  "extra": [],
+  "weak": [],
+  "ineffective": [
+    {
+      "action": "click",
+      "label": "Add to cart",
+      "by": "id",
+      "value": "btn-add-to-cart",
+      "verdict": "no_navigation",
+      "why": "the page did not navigate; in-page effects unmeasured"
+    }
+  ],
+  "steps": [
+    {
+      "description": "Type \"Pliers\" into the search box and run the search",
+      "kind": "input",
+      "expected_target": "Search",
+      "verdict": "covered",
+      "evidence": 0,
+      "evidence_label": "Search",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "From the search results, open the product named \"Slip Joint Pliers\"",
+      "kind": "click",
+      "expected_target": "Slip Joint Pliers",
+      "verdict": "covered",
+      "evidence": 1,
+      "evidence_label": "Slip Joint Pliers Compare Slip Joint Pliers CO₂: A B C D E $",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Add that product to the cart",
+      "kind": "click",
+      "expected_target": "Add to cart",
+      "verdict": "covered",
+      "evidence": 2,
+      "evidence_label": "Add to cart",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Open the cart page",
+      "kind": "click",
+      "expected_target": "cart",
+      "verdict": "covered",
+      "evidence": 3,
+      "evidence_label": "cart",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    }
+  ],
+  "step_summary": {
+    "available": true,
+    "steps_total": 4,
+    "covered": 4,
+    "missing": 0,
+    "unverifiable": 0,
+    "actions_recorded": 4,
+    "conflicts": []
+  },
+  "next": "If a gap node types via input(), re-run python -m browser_use.action_cache. Do not invent locators from evaluate() or axtree."
+}

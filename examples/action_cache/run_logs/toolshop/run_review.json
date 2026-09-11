@@ -1,0 +1,96 @@
+{
+  "values": [
+    {
+      "role": "Search box",
+      "value": "Pliers"
+    }
+  ],
+  "steps": [
+    {
+      "description": "Type \"Pliers\" into the search box and run the search",
+      "kind": "input",
+      "expected_target": "Search",
+      "verdict": "covered",
+      "evidence": 0,
+      "evidence_label": "Search",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "From the search results, open the product named \"Slip Joint Pliers\"",
+      "kind": "click",
+      "expected_target": "Slip Joint Pliers",
+      "verdict": "covered",
+      "evidence": 1,
+      "evidence_label": "Slip Joint Pliers Compare Slip Joint Pliers CO₂: A B C D E $",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Add that product to the cart",
+      "kind": "click",
+      "expected_target": "Add to cart",
+      "verdict": "covered",
+      "evidence": 2,
+      "evidence_label": "Add to cart",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    },
+    {
+      "description": "Open the cart page",
+      "kind": "click",
+      "expected_target": "cart",
+      "verdict": "covered",
+      "evidence": 3,
+      "evidence_label": "cart",
+      "repair_prompt": null,
+      "repair_prompt_source": null,
+      "notes": []
+    }
+  ],
+  "summary": {
+    "available": true,
+    "steps_total": 4,
+    "covered": 4,
+    "missing": 0,
+    "unverifiable": 0,
+    "actions_recorded": 4,
+    "conflicts": []
+  },
+  "source": "llm",
+  "task": "Type \"Pliers\" into the search box and run the search. From the search results, open the product named \"Slip Joint Pliers\". Add that product to the cart. Then open the cart page. Then stop — do not add any other product.",
+  "fingerprint": "b3209292de20a52e4d001d3f12b515e565f5d14863fcffe0ff46b96e5ae0ed2f",
+  "trace": [
+    {
+      "i": 0,
+      "action": "input",
+      "label": "Search",
+      "text": "Pliers",
+      "url": "https://practicesoftwaretesting.com/"
+    },
+    {
+      "i": 1,
+      "action": "click",
+      "label": "Slip Joint Pliers Compare Slip Joint Pliers CO₂: A B C D E $",
+      "text": null,
+      "url": "https://practicesoftwaretesting.com/product/01M0JM8ANV543S4695PP78M3CK"
+    },
+    {
+      "i": 2,
+      "action": "click",
+      "label": "Add to cart",
+      "text": null,
+      "url": "https://practicesoftwaretesting.com/product/01M0JM8ANV543S4695PP78M3CK"
+    },
+    {
+      "i": 3,
+      "action": "click",
+      "label": "cart",
+      "text": null,
+      "url": "https://practicesoftwaretesting.com/product/01M0JM8ANV543S4695PP78M3CK"
+    }
+  ]
+}

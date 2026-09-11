@@ -1,0 +1,19 @@
+{
+  "url": "https://www.saucedemo.com/",
+  "parameters": {
+    "input_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "agentic_task": {
+          "task": "Log in with the username \"standard_user\" and the password \"secret_sauce\". After logging in, click the \"Add to cart\" button belonging to the product \"Sauce Labs Backpack\". Then open the cart page by clicking the shopping cart icon in the top right corner. Then stop — do not add any other product.",
+          "max_steps": 15,
+          "backend": "browser_use"
+        }
+      }
+    }
+  ]
+}

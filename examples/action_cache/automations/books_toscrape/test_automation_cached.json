@@ -1,0 +1,39 @@
+{
+  "url": "https://books.toscrape.com/",
+  "parameters": {
+    "input_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "get_by_role(\"link\", name=\"Travel\").first",
+          "prompt_instructions": "Click the element Travel (role=Travel)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "command": "get_by_role(\"link\", name=\"It's Only the Himalayas\").first",
+          "prompt_instructions": "Click the element It's Only the Himalayas (role=It's Only the Himalayas)",
+          "skip_prompt": true
+        }
+      }
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "click_element": {
+          "prompt_instructions": "On the book detail page for \"It's Only the Himalayas\", find the button labelled \"Add to basket\" and click it.",
+          "skip_prompt": false,
+          "skip_command": true
+        }
+      }
+    }
+  ]
+}

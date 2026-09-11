@@ -1,0 +1,13 @@
+2026-08-20 21:49:15,103 [WARNING] optexity.cli.<module>: ENV_PATH is not set, using default values
+Traceback (most recent call last):
+  File "/Users/akhil/Desktop/Oplexity Assignment/.venv/bin/optexity", line 8, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/akhil/Desktop/Oplexity Assignment/optexity/optexity/cli.py", line 80, in main
+    args.func(args)
+    ~~~~~~~~~^^^^^^
+  File "/Users/akhil/Desktop/Oplexity Assignment/optexity/optexity/cli.py", line 36, in run_inference
+    from optexity.inference.child_process import get_app_with_endpoints
+  File "/Users/akhil/Desktop/Oplexity Assignment/optexity/optexity/inference/child_process.py", line 242
+    logger.info("Using local %s override for run", test_automation_path)
+IndentationError: unexpected indent

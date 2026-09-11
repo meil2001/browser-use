@@ -1,0 +1,15 @@
+#!/bin/bash
+# Copy to setup_env.sh and fill in your keys. Do NOT commit setup_env.sh.
+
+# Optexity dashboard → Profile → API Key (needed to fetch cloud workflows)
+export API_KEY=YOUR_OPTEXITY_API_KEY
+
+export DEPLOYMENT=dev
+
+# Option A: Gemini (free from Google AI Studio)
+# export LLM_MODEL=gemini/gemini-3.5-flash-lite
+# export LLM_MODEL_API_KEY=YOUR_GEMINI_API_KEY
+
+# Option B: Anthropic (founder provided key for assignment)
+export LLM_MODEL=anthropic/claude-sonnet-4-6
+export LLM_MODEL_API_KEY=YOUR_ANTHROPIC_API_KEY
